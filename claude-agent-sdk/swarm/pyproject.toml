@@ -1,0 +1,10 @@
+[project]
+name = "lens-claude-agent-sdk-swarm"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "claude-agent-sdk",
+    "openinference-instrumentation-claude-agent-sdk",
+    "opentelemetry-distro",
+    "opentelemetry-exporter-otlp-proto-http",
+]

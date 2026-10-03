@@ -1,3 +1,7 @@
+- Run from this folder: `uv run --env-file .env --package lens-claude-agent-sdk-<simple|swarm> <simple|swarm>/main.py`.
 - Model calls go to LiteLLM's Anthropic `/v1/messages` via `ANTHROPIC_BASE_URL` and `ANTHROPIC_AUTH_TOKEN` in `ClaudeAgentOptions.env`.
 - The agent name comes from `OTEL_RESOURCE_ATTRIBUTES`; the instrumentor emits one `ClaudeAgentSDK.query` span with input and output, not the internal model calls.
 - The bundled CLI makes an extra model call to title the session and may warn `unrecognized_model` for non-Claude model names.
+- `swarm` defines subagents with `ClaudeAgentOptions.agents` (`AgentDefinition`); they run inside the same CLI process, so the resource attribute names only `research_agent`.
+- Each delegation shows up as an `Agent` tool span whose input has `subagent_type` set to `search_agent` or `writer_agent`, with a `ClaudeAgentSDK.Agent` agent span under it; that span's `agent.name` is the tool name `Agent`, not the subagent name.
+- Subagents use `model="inherit"` so they call `LITELLM_MODEL` instead of a Claude alias, and `tools=[]` so they only answer.
