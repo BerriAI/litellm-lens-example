@@ -1,0 +1,3 @@
+- The model goes through the `litellm` package with the `litellm_proxy/` prefix; `api_base` has no `/v1`.
+- `run_debug` prints the answer itself as `research_agent > ...`.
+- Prompt and answer are recorded on the `call_llm` span as `gcp.vertex.agent.llm_request` and `gcp.vertex.agent.llm_response`, not as `gen_ai.*.messages`.

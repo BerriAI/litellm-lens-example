@@ -1,0 +1,12 @@
+{
+  "name": "lens-vercel-ai-sdk",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@ai-sdk/openai-compatible": "^3.0.62",
+    "@ai-sdk/otel": "^1.0.127",
+    "@opentelemetry/exporter-trace-otlp-proto": "^0.222.0",
+    "@opentelemetry/sdk-node": "^0.222.0",
+    "ai": "^7.0.127"
+  }
+}

@@ -1,0 +1,1 @@
+- `graph.compile(name="research_agent")` sets the root span name; each node becomes a child span.

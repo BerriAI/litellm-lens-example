@@ -1,0 +1,3 @@
+- `pydantic-ai>=1` is required; without the floor uv resolves 0.8.1.
+- `LiteLLMProvider` passes `api_base` to the OpenAI client as is, so it includes `/v1`.
+- `Agent.instrument_all()` emits `gen_ai.*` spans with full input and output messages.

@@ -1,0 +1,2 @@
+- `OpenAIChatCompletionsModel` uses chat completions instead of the default Responses API.
+- The openinference instrumentor replaces the SDK's built-in OpenAI trace exporter, so no `OPENAI_API_KEY` is needed. Do not call `set_tracing_disabled`; it also removes these spans.

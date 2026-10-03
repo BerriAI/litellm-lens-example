@@ -1,0 +1,2 @@
+- No framework instrumentation: the only span is the manual `research_agent` span with `gen_ai.agent.name`, `openinference.span.kind`, `input.value` and `output.value`.
+- The `openai` client call itself produces no span.

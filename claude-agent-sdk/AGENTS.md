@@ -1,0 +1,3 @@
+- Model calls go to LiteLLM's Anthropic `/v1/messages` via `ANTHROPIC_BASE_URL` and `ANTHROPIC_AUTH_TOKEN` in `ClaudeAgentOptions.env`.
+- The agent name comes from `OTEL_RESOURCE_ATTRIBUTES`; the instrumentor emits one `ClaudeAgentSDK.query` span with input and output, not the internal model calls.
+- The bundled CLI makes an extra model call to title the session and may warn `unrecognized_model` for non-Claude model names.

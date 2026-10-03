@@ -1,0 +1,3 @@
+- Uses `@opentelemetry/exporter-trace-otlp-proto` to send protobuf; `exporter-trace-otlp-http` sends JSON.
+- `functionId` becomes `gen_ai.agent.name`; the root span is named after the model.
+- `sdk.shutdown()` in `finally` flushes spans before exit.

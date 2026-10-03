@@ -1,0 +1,2 @@
+- deepagents always adds built-in tools, so `ChatOpenAI` uses the Responses API (`/v1/responses`) for `gpt-*` models; pass `use_responses_api=False` to force chat completions.
+- The agent name is the root span name `research_agent`.

@@ -1,0 +1,5 @@
+- Run with `uv run server.py`.
+- Records OTLP/HTTP traces locally instead of sending them to LiteLLM; it does not proxy model calls.
+- Listens on `http://localhost:4318/v1/traces` (`PORT` to change); accepts protobuf or JSON, gzip and chunked bodies.
+- Prints each export's auth header and spans, and appends each export as OTLP JSON to `recorder/traces.jsonl` (`TRACES_FILE` to change).
+- Set `MOCK_LITELLM_GATEWAY_URL=http://localhost:4318` in an example's `.env` to send it a copy of the traces; model calls and the main export still go to `LITELLM_GATEWAY_URL`.

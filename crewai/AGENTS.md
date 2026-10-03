@@ -1,0 +1,3 @@
+- `requires-python` is capped below 3.14 because CrewAI does not support 3.14.
+- `LLM("openai/<model>")` uses CrewAI's own OpenAI client, so traces contain crew and agent spans but no model-call span.
+- The agent name appears as `graph.node.id` and in the `research_agent._execute_core` span name.

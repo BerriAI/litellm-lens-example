@@ -1,0 +1,1 @@
+- The agent name is the root span name `research_agent`; it is not set as a resource attribute.

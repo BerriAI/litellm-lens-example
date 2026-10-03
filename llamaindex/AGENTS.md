@@ -1,0 +1,3 @@
+- The instrumentor does not export `FunctionAgent.name`, so the agent name comes from `OTEL_RESOURCE_ATTRIBUTES`.
+- `LlamaIndexInstrumentor().instrument()` must run before importing `llama_index`.
+- The doc uses top-level `await`; here it is wrapped in `asyncio.run`.

@@ -1,0 +1,3 @@
+- `initialize()` is enough; `StrandsTelemetry()` is not needed.
+- `OTEL_SEMCONV_STABILITY_OPT_IN` puts message content in span attributes.
+- `callback_handler=None` stops Strands from also streaming the answer to stdout.

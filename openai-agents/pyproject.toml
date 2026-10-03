@@ -1,0 +1,10 @@
+[project]
+name = "lens-openai-agents"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "openai-agents",
+    "openinference-instrumentation-openai-agents",
+    "opentelemetry-distro",
+    "opentelemetry-exporter-otlp-proto-http",
+]
