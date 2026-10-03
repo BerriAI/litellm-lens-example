@@ -5,6 +5,7 @@ requires-python = ">=3.13"
 dependencies = [
     "google-adk",
     "litellm",
+    "openinference-instrumentation-google-adk",
     "opentelemetry-distro",
     "opentelemetry-exporter-otlp-proto-http",
 ]

@@ -5,10 +5,23 @@ import { generateText, registerTelemetry } from "ai";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 
 const headers = { Authorization: `Bearer ${process.env.LITELLM_API_KEY}` };
+// @ai-sdk/otel names agent spans `invoke_agent <model>`; use the agent name instead.
+const nameAgentSpans: tracing.SpanProcessor = {
+  onStart: (span) => {
+    const agent = span.attributes["gen_ai.agent.name"];
+    if (span.attributes["gen_ai.operation.name"] === "invoke_agent" && agent) span.updateName(`invoke_agent ${agent}`);
+  },
+  onEnd: () => {},
+  forceFlush: async () => {},
+  shutdown: async () => {},
+};
 const sdk = new NodeSDK({
-  spanProcessors: [process.env.LITELLM_GATEWAY_URL, process.env.MOCK_LITELLM_GATEWAY_URL]
-    .filter(Boolean)
-    .map((url) => new tracing.BatchSpanProcessor(new OTLPTraceExporter({ url: `${url}/v1/traces`, headers }))),
+  spanProcessors: [
+    nameAgentSpans,
+    ...[process.env.LITELLM_GATEWAY_URL, process.env.MOCK_LITELLM_GATEWAY_URL]
+      .filter(Boolean)
+      .map((url) => new tracing.BatchSpanProcessor(new OTLPTraceExporter({ url: `${url}/v1/traces`, headers }))),
+  ],
 });
 sdk.start();
 registerTelemetry(new OpenTelemetry());

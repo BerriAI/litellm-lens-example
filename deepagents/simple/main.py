@@ -19,8 +19,9 @@ model = ChatOpenAI(
     base_url=f"{os.environ['LITELLM_GATEWAY_URL']}/v1",
     api_key=os.environ["LITELLM_API_KEY"],
     model=os.environ["LITELLM_MODEL"],
+    use_responses_api=True,
 )
 
 agent = create_deep_agent(name="research_agent", model=model, tools=[])
 result = agent.invoke({"messages": [{"role": "user", "content": "What is an agent trace?"}]})
-print(result["messages"][-1].content)
+print(result["messages"][-1].text)

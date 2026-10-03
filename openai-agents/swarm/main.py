@@ -12,10 +12,10 @@ for url in filter(None, [os.environ["LITELLM_GATEWAY_URL"], os.environ.get("MOCK
     exporter = OTLPSpanExporter(f"{url}/v1/traces", headers=headers)
     trace.get_tracer_provider().add_span_processor(BatchSpanProcessor(exporter))
 
-from agents import Agent, OpenAIChatCompletionsModel, Runner
+from agents import Agent, OpenAIResponsesModel, RunConfig, Runner
 from openai import AsyncOpenAI
 
-model = OpenAIChatCompletionsModel(
+model = OpenAIResponsesModel(
     model=os.environ["LITELLM_MODEL"],
     openai_client=AsyncOpenAI(
         base_url=f"{os.environ['LITELLM_GATEWAY_URL']}/v1",
@@ -34,5 +34,5 @@ agent = Agent(
         writer_agent.as_tool("writer_agent", "Write a short answer from facts."),
     ],
 )
-result = Runner.run_sync(agent, "What is an agent trace?")
+result = Runner.run_sync(agent, "What is an agent trace?", run_config=RunConfig(workflow_name="research_workflow"))
 print(result.final_output)

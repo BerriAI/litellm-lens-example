@@ -26,5 +26,6 @@ agent = Agent(
     backstory="You explain technical concepts.",
     llm=model,
 )
-task = Task(description="What is an agent trace?", expected_output="A short answer", agent=agent)
-print(Crew(agents=[agent], tasks=[task]).kickoff())
+task = Task(description="{question}", expected_output="A short answer", agent=agent)
+crew = Crew(name="research_crew", agents=[agent], tasks=[task])
+print(crew.kickoff(inputs={"question": "What is an agent trace?"}))

@@ -27,6 +27,7 @@ model = OpenAILike(
     api_key=os.environ["LITELLM_API_KEY"],
     is_chat_model=True,
     is_function_calling_model=True,
+    temperature=1,
 )
 
 
@@ -36,6 +37,7 @@ async def main():
         description="Coordinates research.",
         system_prompt="Hand off to search_agent to gather facts.",
         llm=model,
+        streaming=False,
         can_handoff_to=["search_agent", "writer_agent"],
     )
     search_agent = FunctionAgent(
@@ -43,6 +45,7 @@ async def main():
         description="Gathers facts.",
         system_prompt="List key facts, then hand off to writer_agent.",
         llm=model,
+        streaming=False,
         can_handoff_to=["writer_agent"],
     )
     writer_agent = FunctionAgent(
@@ -50,6 +53,7 @@ async def main():
         description="Writes the final answer.",
         system_prompt="Write a short answer from the facts.",
         llm=model,
+        streaming=False,
         can_handoff_to=[],
     )
     workflow = AgentWorkflow(agents=[research_agent, search_agent, writer_agent], root_agent="research_agent")

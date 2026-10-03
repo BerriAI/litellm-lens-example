@@ -19,6 +19,9 @@ from claude_agent_sdk import AgentDefinition, ClaudeAgentOptions, ResultMessage,
 
 options = ClaudeAgentOptions(
     model=os.environ["LITELLM_MODEL"],
+    tools=["Agent"],
+    permission_mode="bypassPermissions",
+    setting_sources=[],
     system_prompt="Answer by delegating: first ask search_agent for facts, then ask writer_agent to write the final answer from them.",
     agents={
         "search_agent": AgentDefinition(
@@ -37,10 +40,13 @@ options = ClaudeAgentOptions(
     env={
         "ANTHROPIC_BASE_URL": os.environ["LITELLM_GATEWAY_URL"],
         "ANTHROPIC_AUTH_TOKEN": os.environ["LITELLM_API_KEY"],
+        "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
         "OTEL_EXPORTER_OTLP_HEADERS": f"Authorization=Bearer {os.environ['LITELLM_API_KEY']}",
         "OTEL_LOG_USER_PROMPTS": "1",
+        "OTEL_LOG_TOOL_DETAILS": "1",
         "ENABLE_BETA_TRACING_DETAILED": "1",
         "BETA_TRACING_ENDPOINT": os.environ["LITELLM_GATEWAY_URL"],
+        "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1",
     },
 )
 

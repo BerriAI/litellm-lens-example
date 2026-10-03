@@ -1,4 +1,5 @@
-- `OpenAIChatCompletionsModel` uses chat completions instead of the default Responses API.
+- Use `OpenAIResponsesModel`, not `OpenAIChatCompletionsModel`: only the Responses API `response` span records the provider response (`output.value` with `id`), which Lens joins to LiteLLM spend. The chat completions `generation` span has no response id, so spend is null.
+- Name the run with `RunConfig(workflow_name=...)`; the default root span is `Agent workflow`. The instrumentor emits the trace as an AGENT-kind root span without `agent.name` and no input, so Lens lists the workflow name as an extra agent and shows no trace input.
 - The openinference instrumentor replaces the SDK's built-in OpenAI trace exporter, so no `OPENAI_API_KEY` is needed. Do not call `set_tracing_disabled`; it also removes these spans.
 - Run from this folder: `uv run --env-file .env --package lens-openai-agents-<simple|swarm> <simple|swarm>/main.py`.
 - `swarm` uses agents-as-tools (`Agent.as_tool`), not handoffs, so the coordinator stays in control and both specialists run nested under `research_agent` in one trace. Each sub-agent gets its own agent span named after `Agent.name`; the wrapping tool span uses the `as_tool` tool name, kept identical to the agent name.

@@ -1,6 +1,9 @@
 - npm workspaces: run `npm install` and `node --env-file=.env <example>/main.ts` from this folder.
 - Uses `@opentelemetry/exporter-trace-otlp-proto` to send protobuf; `exporter-trace-otlp-http` sends JSON.
-- `functionId` becomes `gen_ai.agent.name`; the root span is named after the model.
+- `functionId` becomes `gen_ai.agent.name`, but `@ai-sdk/otel` names agent spans `invoke_agent <model>` with no option to change it; the `nameAgentSpans` processor renames them to `invoke_agent <functionId>`.
+- `@ai-sdk/otel` uses tracer scope `gen_ai`, so Lens shows no framework.
+- Agent spans carry the summed `gen_ai.usage.*` of their LLM calls.
 - `sdk.shutdown()` in `finally` flushes spans before exit; if export fails it throws from `finally` and masks the model error.
 - Swarm: no native multi-agent primitive; sub-agents are tools whose `execute` calls `generateText` with their own `functionId`. `@ai-sdk/otel` runs `execute` inside the tool span, so sub-agent spans nest under the coordinator's tool call in one trace.
 - Swarm: `generateText` defaults to `stopWhen: isStepCount(1)`, so the coordinator needs `stopWhen: stepCountIs(n)` to continue after tool results.
+- Swarm: chat calls with `tools` are bridged to the Responses API by the gateway, which returns a raw `resp_` id while spend logs store the encoded one, so `research_agent` and trace spend are null.

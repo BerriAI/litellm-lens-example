@@ -10,7 +10,7 @@ cp .env.example .env
   ```sh
   uv run --env-file .env --package lens-google-adk-simple simple/main.py
   ```
-- `swarm`: `research_agent` transfers to its `search_agent` and `writer_agent` sub-agents.
+- `swarm`: `research_agent` calls `search_agent` and `writer_agent` as tools.
   ```sh
   uv run --env-file .env --package lens-google-adk-swarm swarm/main.py
   ```

@@ -1,4 +1,5 @@
 - Run from this folder: `uv run --env-file .env --package lens-opentelemetry-<simple|swarm> <simple|swarm>/main.py`.
-- No framework instrumentation: the only spans are manual agent spans with `gen_ai.agent.name`, `openinference.span.kind`, `input.value` and `output.value`.
-- The `openai` client call itself produces no span.
+- No agent framework: agent spans are manual, with `gen_ai.agent.name`, `openinference.span.kind`, `input.value` and `output.value`.
+- `openinference-instrumentation-openai` (loaded by `initialize()`) adds the model-call span; its `output.value` response `id` is what joins spend.
+- `opentelemetry-instrumentation-openai-v2` 2.4b0 is skipped by `initialize()`: it imports `httpx` (openai 3 ships `httpx2`) and `opentelemetry.util.genai.instruments` (renamed in util-genai 1.2b0).
 - `swarm` has no multi-agent primitive to use: `search_agent` and `writer_agent` are child spans nested under the `research_agent` span via `start_as_current_span`, so they share its trace; the coordinator span makes no model call itself.

@@ -19,9 +19,12 @@ from claude_agent_sdk import ClaudeAgentOptions, ResultMessage, query
 
 options = ClaudeAgentOptions(
     model=os.environ["LITELLM_MODEL"],
+    tools=[],
+    setting_sources=[],
     env={
         "ANTHROPIC_BASE_URL": os.environ["LITELLM_GATEWAY_URL"],
         "ANTHROPIC_AUTH_TOKEN": os.environ["LITELLM_API_KEY"],
+        "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
         "OTEL_EXPORTER_OTLP_HEADERS": f"Authorization=Bearer {os.environ['LITELLM_API_KEY']}",
         "OTEL_LOG_USER_PROMPTS": "1",
         "ENABLE_BETA_TRACING_DETAILED": "1",

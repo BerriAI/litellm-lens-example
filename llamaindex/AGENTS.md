@@ -4,4 +4,8 @@
 - The doc uses top-level `await`; here it is wrapped in `asyncio.run`.
 - `swarm`: `OTEL_RESOURCE_ATTRIBUTES` is per process, so every span carries `gen_ai.agent.name=research_agent`; `search_agent` and `writer_agent` show up only as `current_agent_name` inside `input.value` of `AgentWorkflow.setup_agent`/`run_agent_step` spans and as `to_agent` in the `handoff` tool call.
 - `swarm`: `AgentWorkflow` requires every agent to have a non-default `name` and `description`, and a `root_agent`. Handoff is one-way; `can_handoff_to=[]` gives `writer_agent` no tools.
-- `FunctionAgent` streams by default, so LLM spans are `OpenAILike.astream_chat`.
+- `FunctionAgent` streams by default; streamed `OpenAILike.astream_chat` spans carry no token counts, so the examples pass `streaming=False` (LLM spans become `OpenAILike.achat`).
+- `OpenAILike` defaults to `temperature=0.1`, which reasoning models reject; the examples pass `temperature=1`.
+- Each model call yields three `llm` spans: `OpenAILike._prepare_chat_with_tools`, an outer `achat`, and a nested `achat` that holds the messages and token counts. None records the response `id`, so Lens cannot join spend.
+- The instrumentor never attaches its spans to the OTel context, so `openinference-instrumentation-openai` spans land in separate root traces; don't add it.
+- The root span input is the workflow's `init_state`/`start_event`; `user_msg` is not recorded there.

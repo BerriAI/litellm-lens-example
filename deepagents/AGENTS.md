@@ -1,5 +1,7 @@
 - Run from `deepagents/`: `uv run --env-file .env --package lens-deepagents-<simple|swarm> <simple|swarm>/main.py`.
-- deepagents always adds built-in tools, so `ChatOpenAI` uses the Responses API (`/v1/responses`) for `gpt-*` models; pass `use_responses_api=False` to force chat completions.
+- `ChatOpenAI` picks the Responses API by model name (e.g. `gpt-*` with tools, but not `openai/gpt-*`), so `use_responses_api=True` is set explicitly: the LLM span output's `generations[0][0].message.kwargs.response_metadata.id` then equals the spend `response_id`. Over chat completions, a model the gateway bridges to Responses returns the raw provider id, which does not match.
+- Responses API message content is a list of blocks (reasoning + text); print `.text`, not `.content`.
+- The root span input is LangChain-serialized messages (`{"messages": [{"type": "human", "data": {...}}]}`), not the plain question.
 - The agent name is the root span name `research_agent`.
 - In `swarm`, subagents are `SubAgent` dicts passed via `subagents=`; the coordinator calls them through the built-in `task` tool, and each subagent runs with `run_name` = its `name`, so `search_agent` / `writer_agent` show up as child span names under the `task` tool span.
 - Subagents inherit the parent's model when `model` is omitted; deepagents also adds a default `general-purpose` subagent.

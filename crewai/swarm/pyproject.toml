@@ -5,6 +5,7 @@ requires-python = ">=3.13,<3.14"
 dependencies = [
     "crewai",
     "openinference-instrumentation-crewai",
+    "openinference-instrumentation-openai",
     "opentelemetry-distro",
     "opentelemetry-exporter-otlp-proto-http",
 ]

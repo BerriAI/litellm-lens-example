@@ -1,7 +1,13 @@
 - Run from this folder: `uv run --env-file .env --package lens-claude-agent-sdk-<simple|swarm> <simple|swarm>/main.py`.
 - Model calls go to LiteLLM's Anthropic `/v1/messages` via `ANTHROPIC_BASE_URL` and `ANTHROPIC_AUTH_TOKEN` in `ClaudeAgentOptions.env`.
-- The agent name comes from `OTEL_RESOURCE_ATTRIBUTES`; the instrumentor emits one `ClaudeAgentSDK.query` span with input and output, not the internal model calls.
-- The bundled CLI makes an extra model call to title the session and may warn `unrecognized_model` for non-Claude model names.
-- `swarm` defines subagents with `ClaudeAgentOptions.agents` (`AgentDefinition`); they run inside the same CLI process, so the resource attribute names only `research_agent`.
-- Each delegation shows up as an `Agent` tool span whose input has `subagent_type` set to `search_agent` or `writer_agent`, with a `ClaudeAgentSDK.Agent` agent span under it; that span's `agent.name` is the tool name `Agent`, not the subagent name.
+- The agent name comes from `OTEL_RESOURCE_ATTRIBUTES`; the instrumentor emits one `ClaudeAgentSDK.query` span with input and output plus tool spans, not the internal model calls.
+- Model-call spans come from the bundled CLI's own tracing: `ENABLE_BETA_TRACING_DETAILED=1`, `BETA_TRACING_ENDPOINT` and `OTEL_EXPORTER_OTLP_HEADERS` in `ClaudeAgentOptions.env` export `claude_code.interaction`, `claude_code.llm_request` and `claude_code.tool` spans. The SDK passes `TRACEPARENT`, so they nest under `ClaudeAgentSDK.query`. `OTEL_LOG_USER_PROMPTS=1` adds prompt and response text; `OTEL_LOG_TOOL_DETAILS=1` adds tool inputs.
+- CLI spans inherit `OTEL_RESOURCE_ATTRIBUTES`, so every CLI span, subagent model calls included, is named `research_agent`. The subagent name appears only in the `llm_request` attribute `query_source=agent:custom:<name>` and in the `Agent` tool span's `subagent_type`.
+- `llm_request` spans carry no response id, because LiteLLM's `/v1/messages` sends no `request-id` header. Without that id, spend is not joined.
+- Without `setting_sources=[]` and an explicit `tools` list, the CLI loads `~/.claude` skills and settings and the default tools, and the run makes unrelated `Skill`/`Read` calls.
+- `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1` drops the extra model call that titles the session.
+- `swarm` defines subagents with `ClaudeAgentOptions.agents` (`AgentDefinition`); they run inside the same CLI process.
+- Subagents run in the background by default: the `Agent` tool returns at once and the coordinator polls with `SendMessage`/`ListAgents`. `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1` makes them synchronous; `AgentDefinition(background=False)` does not.
+- Tool calls can go through the permission classifier, which makes extra ~30k-token model calls (the first fails on `claude-sonnet-5`). `permission_mode="bypassPermissions"` skips the classifier.
+- The instrumentor's subagent span is `ClaudeAgentSDK.Agent` under its `Agent` tool span, with `agent.name` set to the tool name `Agent`, not the subagent name. Each delegation therefore shows up twice: once as an instrumentor tool span and once as a CLI tool span.
 - Subagents use `model="inherit"` so they call `LITELLM_MODEL` instead of a Claude alias, and `tools=[]` so they only answer.

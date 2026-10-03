@@ -27,11 +27,12 @@ model = OpenAILike(
     api_key=os.environ["LITELLM_API_KEY"],
     is_chat_model=True,
     is_function_calling_model=True,
+    temperature=1,
 )
 
 
 async def main():
-    agent = FunctionAgent(name="research_agent", llm=model, tools=[])
+    agent = FunctionAgent(name="research_agent", llm=model, tools=[], streaming=False)
     result = await agent.run(user_msg="What is an agent trace?")
     print(result)
 

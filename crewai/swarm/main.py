@@ -38,10 +38,10 @@ writer_agent = Agent(
     backstory="You explain technical concepts.",
     llm=model,
 )
-question = "What is an agent trace?"
 tasks = [
-    Task(description=f"Plan how to answer: {question}", expected_output="A short research plan", agent=research_agent),
-    Task(description=f"Gather facts for: {question}", expected_output="A few key facts", agent=search_agent),
-    Task(description=question, expected_output="A short answer", agent=writer_agent),
+    Task(description="Plan how to answer: {question}", expected_output="A short research plan", agent=research_agent),
+    Task(description="Gather facts for: {question}", expected_output="A few key facts", agent=search_agent),
+    Task(description="{question}", expected_output="A short answer", agent=writer_agent),
 ]
-print(Crew(agents=[research_agent, search_agent, writer_agent], tasks=tasks).kickoff())
+crew = Crew(name="research_crew", agents=[research_agent, search_agent, writer_agent], tasks=tasks)
+print(crew.kickoff(inputs={"question": "What is an agent trace?"}))

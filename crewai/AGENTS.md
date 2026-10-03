@@ -1,6 +1,7 @@
 - `simple/` and `swarm/` are members of a uv workspace; run from `crewai/` with `uv run --env-file .env --package lens-crewai-<example> <example>/main.py`.
 - `requires-python` is capped below 3.14 because CrewAI does not support 3.14.
-- `LLM("openai/<model>")` uses CrewAI's own OpenAI client, so traces contain crew and agent spans but no model-call span.
+- `LLM("openai/<model>")` uses CrewAI's own OpenAI client, which `openinference-instrumentation-crewai` does not trace; `openinference-instrumentation-openai` adds the model-call span.
+- Name the crew and pass the question through `kickoff(inputs=...)`: otherwise the root span is `Crew_<uuid>.kickoff` with no input.
 - The agent name appears as `graph.node.id` and in the `<role>._execute_core` span name (e.g. `research_agent._execute_core`).
 - `swarm` uses a sequential crew with one task per agent, not `Process.hierarchical`: hierarchical delegation runs coworkers through `Agent.execute_task`, which the instrumentation does not wrap, so coworker names only show up inside the `Delegate work to coworker.run` tool span input.
 - In a sequential crew, `graph.node.parent_id` is the previous agent in `Crew(agents=[...])` order, not the task flow.

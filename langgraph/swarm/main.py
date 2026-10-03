@@ -30,10 +30,10 @@ def specialist(name, prompt):
 
 
 graph = StateGraph(MessagesState)
-graph.add_node("search_agent", specialist("search_agent", "Gather the key facts about the user's question."))
-graph.add_node("writer_agent", specialist("writer_agent", "Write a concise answer from the facts above."))
-graph.add_edge(START, "search_agent")
-graph.add_edge("search_agent", "writer_agent")
+graph.add_node("search", specialist("search_agent", "Gather the key facts about the user's question."))
+graph.add_node("write", specialist("writer_agent", "Write a concise answer from the facts above."))
+graph.add_edge(START, "search")
+graph.add_edge("search", "write")
 
 agent = graph.compile(name="research_agent")
 result = agent.invoke({"messages": [{"role": "user", "content": "What is an agent trace?"}]})

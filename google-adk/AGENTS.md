@@ -1,7 +1,8 @@
 - Run from this folder: `uv run --env-file .env --package lens-google-adk-<simple|swarm> <simple|swarm>/main.py`.
 - The model goes through the `litellm` package with the `litellm_proxy/` prefix; `api_base` has no `/v1`.
 - `run_debug` prints each agent's answer itself as `<agent name> > ...`.
-- Prompt and answer are recorded on the `call_llm` span as `gcp.vertex.agent.llm_request` and `gcp.vertex.agent.llm_response`, not as `gen_ai.*.messages`.
-- Each agent gets its own `invoke_agent <name>` span with `gen_ai.agent.name`.
-- In swarm, `sub_agents` delegation is LLM-driven via the auto-added `transfer_to_agent` tool; control does not return to the parent, so `search_agent` hands off to its peer `writer_agent` (peer transfer is on by default) and `writer_agent` gives the final answer.
-- The model picks the transfer target from each sub-agent's `description`.
+- `openinference-instrumentation-google-adk` registers as an OTel instrumentor, so `initialize()` picks it up and it replaces ADK's native spans: root `invocation [<app_name>]` with the run input, `agent_run [<name>]` per agent, `call_llm` as the LLM span, `execute_tool <name>`.
+- ADK's native spans have no framework, no root input, and token counts on both `call_llm` and `generate_content`, which doubles trace tokens in Lens.
+- ADK drops the provider response id, so Lens cannot join spend; `ResponseIdLogger` sets `gen_ai.response.id` on the current (`call_llm`) span from a litellm callback. litellm's built-in `"otel"` callback does the same but logs a "Proxy Server is not installed" warning, adds dozens of `metadata.*` attributes, and a `raw_gen_ai_request` span.
+- `openinference-instrumentation-litellm` adds a second LLM span per call and records `output.value` as plain text, so it has no response id.
+- In swarm, sub-agents are `AgentTool`s so their spans nest under `research_agent` and it gives the final answer. With `sub_agents` transfer, each agent's span is a sibling under the root (no `parent_agent`), and the openinference wrapper logs "Failed to detach context" when ADK closes the transferring agent's generator.
