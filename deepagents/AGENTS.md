@@ -3,4 +3,4 @@
 - The agent name is the root span name `research_agent`.
 - In `swarm`, subagents are `SubAgent` dicts passed via `subagents=`; the coordinator calls them through the built-in `task` tool, and each subagent runs with `run_name` = its `name`, so `search_agent` / `writer_agent` show up as child span names under the `task` tool span.
 - Subagents inherit the parent's model when `model` is omitted; deepagents also adds a default `general-purpose` subagent.
-- uv may pick a free-threaded Python (3.14t) where `orjson` has no wheel and fails to build; pass `--python 3.13` (or a non-free-threaded 3.14) if `uv sync` fails.
+- `.python-version` pins 3.13; otherwise uv may pick a free-threaded 3.14t, where `orjson` has no wheel and fails to build.

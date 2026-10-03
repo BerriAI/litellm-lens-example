@@ -1,4 +1,4 @@
 - `graph.compile(name="research_agent")` sets the root span name; each node becomes a child span.
 - uv workspace: run from `langgraph/` with `uv run --env-file .env --package lens-langgraph-<example> <example>/main.py`.
 - swarm: each specialist is a compiled subgraph added as a node; the node key and `compile(name=...)` each emit a span, so `search_agent` appears twice (node span wrapping subgraph span). Keep both names identical.
-- uv may pick a free-threaded Python (3.14t) where `orjson` has no wheel and fails to build; pass `--python 3.13` if so.
+- `.python-version` pins 3.13; otherwise uv may pick a free-threaded 3.14t, where `orjson` has no wheel and fails to build.
