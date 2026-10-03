@@ -1,5 +1,0 @@
-{
-  "name": "lens-vercel-ai-sdk",
-  "private": true,
-  "workspaces": ["simple", "swarm"]
-}

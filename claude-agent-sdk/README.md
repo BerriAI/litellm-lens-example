@@ -2,6 +2,8 @@
 
 Send Claude Agent SDK traces to [LiteLLM Lens](https://docs.litellm.ai/docs/proxy/lens).
 
+- [Observability](https://code.claude.com/docs/en/agent-sdk/observability)
+
 ```sh
 cp .env.example .env
 ```

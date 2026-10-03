@@ -1,12 +1,13 @@
 [project]
-name = "lens-pydantic-ai-simple"
+name = "lens-vercel-ai-sdk-py-simple"
 version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
+    "ai[openai]>=0.8",
     "gateway-tracing[httpx2]",
+    "openai>=3",
     "opentelemetry-distro",
     "opentelemetry-exporter-otlp-proto-http",
-    "pydantic-ai-slim[openai]>=1",
 ]
 
 [tool.uv.sources]

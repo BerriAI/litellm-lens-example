@@ -1,0 +1,28 @@
+Recording OTLP traces on http://localhost:4318/v1/traces to /Users/yujonglee/dev/litellm-lens-example/recorder/traces.jsonl
+POST /v1/traces auth='Bearer local-tracing-master-key'
+  aad26617 'gateway.request': litellm.gateway.attempt, http.request.method, url.full, server.address, http.response.status_code
+  aad26617 'chat gpt-6.1-sol': gen_ai.operation.name, gen_ai.provider.name, gen_ai.request.model, gen_ai.request.stream, gen_ai.input.messages, gen_ai.output.messages, error.type
+  aad26617 'loop_turn': error.type
+  aad26617 'invoke_agent research_agent': gen_ai.operation.name, gen_ai.agent.name, gen_ai.provider.name, gen_ai.request.model, gen_ai.input.messages, error.type
+POST /v1/traces auth='Bearer local-tracing-master-key'
+  9a0dcee7 'gateway.request': litellm.gateway.attempt, http.request.method, url.full, server.address, http.response.status_code
+  9a0dcee7 'chat gpt-6.1-sol': gen_ai.operation.name, gen_ai.provider.name, gen_ai.request.model, gen_ai.request.stream, gen_ai.tool.definitions, gen_ai.input.messages, gen_ai.system_instructions, gen_ai.output.messages, error.type
+  9a0dcee7 'loop_turn': error.type
+  9a0dcee7 'invoke_agent research_agent': gen_ai.operation.name, gen_ai.agent.name, gen_ai.provider.name, gen_ai.request.model, gen_ai.tool.definitions, gen_ai.input.messages, gen_ai.system_instructions, error.type
+POST /v1/traces auth=None
+POST /v1/traces auth='Bearer local-tracing-master-key'
+  49d1c7d7 'processor_run Provider History Compat': gen_ai.operation.name, mastra.span.type, mastra.processor_run.input, mastra.processor_run.output, mastra.metadata.runId
+  49d1c7d7 'processor_run Provider History Compat': gen_ai.operation.name, mastra.span.type, mastra.processor_run.input, mastra.processor_run.output, mastra.metadata.runId
+  49d1c7d7 'processor_run Prefill Error Handler': gen_ai.operation.name, mastra.span.type, mastra.processor_run.input, mastra.processor_run.output, mastra.metadata.runId
+  49d1c7d7 'processor_run Stream Error Retry Processor': gen_ai.operation.name, mastra.span.type, mastra.processor_run.input, mastra.processor_run.output, mastra.metadata.runId
+  49d1c7d7 'chat gpt-6.1-sol': gen_ai.operation.name, mastra.span.type, gen_ai.output.messages, gen_ai.request.model, gen_ai.provider.name, gen_ai.agent.id, gen_ai.agent.name, gen_ai.response.finish_reasons, gen_ai.response.model, mastra.metadata.runId
+  49d1c7d7 'agent_step research_agent': gen_ai.operation.name, mastra.span.type, mastra.model_step.input, mastra.model_step.output, mastra.model_step.step_index, mastra.model_step.is_continued, mastra.metadata.runId, mastra.metadata.modelMetadata
+  49d1c7d7 'model_generation gpt-6.1-sol': gen_ai.operation.name, mastra.span.type, mastra.model_generation.input, mastra.model_generation.output, mastra.metadata.runId
+  49d1c7d7 'invoke_agent research_agent': gen_ai.operation.name, mastra.span.type, mastra.agent_run.input, gen_ai.agent.id, gen_ai.agent.name, gen_ai.system_instructions, error.type, error.message, mastra.metadata.runId
+POST /v1/traces auth='Bearer sk-1234'
+  5c430a05 'processor_run Provider History Compat': gen_ai.operation.name, mastra.span.type, mastra.processor_run.input, mastra.processor_run.output, mastra.metadata.runId
+  5c430a05 'model_chunk research_agent': gen_ai.operation.name, mastra.span.type, mastra.model_chunk.output, mastra.metadata.runId
+  5c430a05 'chat openai/gpt-6-luna': gen_ai.operation.name, mastra.span.type, gen_ai.output.messages, gen_ai.request.model, gen_ai.provider.name, gen_ai.usage.input_tokens, gen_ai.usage.output_tokens, gen_ai.usage.reasoning_tokens, gen_ai.usage.cache_read.input_tokens, gen_ai.agent.id, gen_ai.agent.name, mastra.completion_start_time, gen_ai.response.finish_reasons, gen_ai.response.model, mastra.metadata.runId
+  5c430a05 'agent_step research_agent': gen_ai.operation.name, mastra.span.type, mastra.model_step.input, mastra.model_step.output, mastra.model_step.step_index, mastra.model_step.is_continued, mastra.metadata.runId, mastra.metadata.headers, mastra.metadata.modelMetadata
+  5c430a05 'model_generation openai/gpt-6-luna': gen_ai.operation.name, mastra.span.type, mastra.model_generation.input, mastra.model_generation.output, mastra.metadata.runId
+  5c430a05 'invoke_agent research_agent': gen_ai.operation.name, mastra.span.type, mastra.agent_run.input, mastra.agent_run.output, gen_ai.agent.id, gen_ai.agent.name, gen_ai.system_instructions, mastra.metadata.runId

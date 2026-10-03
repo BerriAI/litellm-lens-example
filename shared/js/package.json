@@ -1,0 +1,15 @@
+{
+  "name": "gateway-tracing",
+  "private": true,
+  "type": "module",
+  "exports": "./gateway-fetch.ts",
+  "dependencies": {
+    "@opentelemetry/api": "1.9.1"
+  },
+  "devDependencies": {
+    "@opentelemetry/sdk-node": "^0.222.0"
+  },
+  "scripts": {
+    "test": "node --test gateway-fetch.test.ts"
+  }
+}

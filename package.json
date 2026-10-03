@@ -1,0 +1,13 @@
+{
+  "name": "litellm-lens-example",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "shared/js",
+    "vercel-ai-sdk-js",
+    "vercel-ai-sdk-js/*"
+  ],
+  "scripts": {
+    "test": "npm test --workspaces --if-present"
+  }
+}

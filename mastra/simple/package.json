@@ -1,0 +1,14 @@
+{
+  "name": "lens-mastra-simple",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@ai-sdk/openai-compatible": "^3.0.62",
+    "@mastra/core": "latest",
+    "@mastra/observability": "latest",
+    "@mastra/otel-bridge": "latest",
+    "@opentelemetry/exporter-trace-otlp-proto": "^0.222.0",
+    "@opentelemetry/sdk-node": "^0.222.0",
+    "zod": "latest"
+  }
+}

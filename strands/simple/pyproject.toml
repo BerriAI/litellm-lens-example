@@ -3,7 +3,11 @@ name = "lens-strands-simple"
 version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
+    "gateway-tracing[httpx]",
     "opentelemetry-distro",
     "opentelemetry-exporter-otlp-proto-http",
     "strands-agents[openai,otel]",
 ]
+
+[tool.uv.sources]
+gateway-tracing = { path = "../../shared/python" }

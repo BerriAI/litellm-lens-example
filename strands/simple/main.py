@@ -14,24 +14,16 @@ for url in filter(None, [os.environ["LITELLM_GATEWAY_URL"], os.environ.get("MOCK
     exporter = OTLPSpanExporter(f"{url}/v1/traces", headers=headers)
     trace.get_tracer_provider().add_span_processor(BatchSpanProcessor(exporter))
 
+from gateway_tracing.httpx import gateway_http_client
 from openai import AsyncOpenAI
 from strands import Agent
 from strands.models.openai import OpenAIModel
 
-client = AsyncOpenAI(base_url=f"{os.environ['LITELLM_GATEWAY_URL']}/v1", api_key=os.environ["LITELLM_API_KEY"])
-create = client.chat.completions.create
-
-
-async def create_with_response_id(**kwargs):
-    async def chunks(stream):
-        async for chunk in stream:
-            trace.get_current_span().set_attribute("gen_ai.response.id", chunk.id)
-            yield chunk
-
-    return chunks(await create(**kwargs))
-
-
-client.chat.completions.create = create_with_response_id
+client = AsyncOpenAI(
+    base_url=f"{os.environ['LITELLM_GATEWAY_URL']}/v1",
+    api_key=os.environ["LITELLM_API_KEY"],
+    http_client=gateway_http_client(f"{os.environ['LITELLM_GATEWAY_URL']}/v1"),
+)
 model = OpenAIModel(client=client, model_id=os.environ["LITELLM_MODEL"])
 
 agent = Agent(name="research_agent", model=model, callback_handler=None)

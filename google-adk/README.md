@@ -14,3 +14,5 @@ cp .env.example .env
   ```sh
   uv run --env-file .env --package lens-google-adk-swarm swarm/main.py
   ```
+
+The gateway HTTP client records each request and retry under the model call, including its gateway call ID. Set `LITELLM_STREAM=1` to run with streaming responses

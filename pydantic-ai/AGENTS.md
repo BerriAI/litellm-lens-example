@@ -2,7 +2,8 @@
 - Use `pydantic-ai-slim`, not `pydantic-ai`: the full package pulls in logfire's httpx instrumentation, which `initialize()` turns on, adding a `POST` span under every model call.
 - `LiteLLMProvider` passes `api_base` to the OpenAI client as is, so it includes `/v1`.
 - `Agent.instrument_all()` emits `gen_ai.*` spans with full input and output messages on `chat` spans; the `invoke_agent` span only has `pydantic_ai.all_messages` and `final_result`, so the root has no input.
-- With tools, the gateway answers `gpt-6-*` chat completions through the Responses API and returns the raw `resp_...` id, which does not match the encoded id in `spend_logs`, so those calls have no spend. `OpenAIResponsesModel` gets the encoded id and full spend.
+- The OpenAI client uses the shared `gateway_tracing.httpx2` transport. Each physical gateway POST gets a child span, injected trace context, and its response gateway call ID, so provider response ID encoding does not determine cost matching.
+- Set `LITELLM_STREAM=1` to run through `Agent.run_stream`; keep the gateway client open until the run finishes, then close it and flush traces.
 - `pyproject.toml` is a uv virtual workspace; run from here with `uv run --env-file .env --package lens-pydantic-ai-<example> <example>/main.py`.
 - `swarm` uses agent delegation: `research_agent` tools call `search_agent.run(...)` / `writer_agent.run(...)`, so each sub-agent's `invoke_agent <name>` span nests under the coordinator's `execute_tool` span in the same trace.
 - Pass `usage=ctx.usage` to delegated runs so sub-agent tokens roll up into the coordinator's usage.

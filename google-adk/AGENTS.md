@@ -1,8 +1,8 @@
 - Run from this folder: `uv run --env-file .env --package lens-google-adk-<simple|swarm> <simple|swarm>/main.py`.
-- The model goes through the `litellm` package with the `litellm_proxy/` prefix; `api_base` has no `/v1`.
+- The model goes through `litellm` with the `openai/` prefix and an explicit `AsyncOpenAI` client pointing at the gateway `/v1` endpoint. The gateway model alias is preserved.
 - `run_debug` prints each agent's answer itself as `<agent name> > ...`.
 - `openinference-instrumentation-google-adk` registers as an OTel instrumentor, so `initialize()` picks it up and it replaces ADK's native spans: root `invocation [<app_name>]` with the run input, `agent_run [<name>]` per agent, `call_llm` as the LLM span, `execute_tool <name>`.
 - ADK's native spans have no framework, no root input, and token counts on both `call_llm` and `generate_content`, which doubles trace tokens in Lens.
-- ADK drops the provider response id, so Lens cannot join spend; `ResponseIdLogger` sets `gen_ai.response.id` on the current (`call_llm`) span from a litellm callback. litellm's built-in `"otel"` callback does the same but logs a "Proxy Server is not installed" warning, adds dozens of `metadata.*` attributes, and a `raw_gen_ai_request` span.
+- `gateway-tracing[httpx]` records each physical gateway POST below `call_llm`, injects that attempt span’s trace context, and captures `x-litellm-call-id`. SDK retries reuse the same instrumented client, including streaming requests.
 - `openinference-instrumentation-litellm` adds a second LLM span per call and records `output.value` as plain text, so it has no response id.
 - In swarm, sub-agents are `AgentTool`s so their spans nest under `research_agent` and it gives the final answer. With `sub_agents` transfer, each agent's span is a sibling under the root (no `parent_agent`), and the openinference wrapper logs "Failed to detach context" when ADK closes the transferring agent's generator.

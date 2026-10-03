@@ -1,0 +1,8 @@
+{
+  "name": "lens-vercel-ai-sdk-js",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "gateway-tracing": "*"
+  }
+}

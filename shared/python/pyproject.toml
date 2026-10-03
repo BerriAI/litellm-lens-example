@@ -1,0 +1,13 @@
+[project]
+name = "gateway-tracing"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = ["opentelemetry-api"]
+
+[project.optional-dependencies]
+httpx = ["httpx"]
+httpx2 = ["httpx2"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

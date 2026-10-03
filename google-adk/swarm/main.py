@@ -13,23 +13,24 @@ for url in filter(None, [os.environ["LITELLM_GATEWAY_URL"], os.environ.get("MOCK
     exporter = OTLPSpanExporter(f"{url}/v1/traces", headers=headers)
     trace.get_tracer_provider().add_span_processor(BatchSpanProcessor(exporter))
 
-import litellm
+from gateway_tracing.httpx import gateway_http_client
 from google.adk.agents import Agent
+from google.adk.agents.run_config import RunConfig, StreamingMode
 from google.adk.models.lite_llm import LiteLlm
 from google.adk.runners import InMemoryRunner
 from google.adk.tools.agent_tool import AgentTool
-from litellm.integrations.custom_logger import CustomLogger
+from openai import AsyncOpenAI
 
 
-class ResponseIdLogger(CustomLogger):
-    async def async_log_success_event(self, kwargs, response_obj, start_time, end_time):
-        trace.get_current_span().set_attribute("gen_ai.response.id", response_obj.id)
-
-
-litellm.callbacks = [ResponseIdLogger()]
+client = AsyncOpenAI(
+    api_key=os.environ["LITELLM_API_KEY"],
+    base_url=f"{os.environ['LITELLM_GATEWAY_URL'].rstrip('/')}/v1",
+    http_client=gateway_http_client(os.environ["LITELLM_GATEWAY_URL"]),
+)
 model = LiteLlm(
-    model=f"litellm_proxy/{os.environ['LITELLM_MODEL']}",
-    api_base=os.environ["LITELLM_GATEWAY_URL"],
+    model=f"openai/{os.environ['LITELLM_MODEL']}",
+    client=client,
+    api_base=f"{os.environ['LITELLM_GATEWAY_URL'].rstrip('/')}/v1",
     api_key=os.environ["LITELLM_API_KEY"],
 )
 
@@ -51,4 +52,9 @@ agent = Agent(
     instruction="Use search_agent to gather facts, then writer_agent to write the answer from them.",
     tools=[AgentTool(search_agent), AgentTool(writer_agent)],
 )
-asyncio.run(InMemoryRunner(agent=agent, app_name="research_app").run_debug("What is an agent trace?"))
+run_config = RunConfig(
+    streaming_mode=StreamingMode.SSE if os.environ.get("LITELLM_STREAM") == "1" else StreamingMode.NONE
+)
+asyncio.run(
+    InMemoryRunner(agent=agent, app_name="research_app").run_debug("What is an agent trace?", run_config=run_config)
+)

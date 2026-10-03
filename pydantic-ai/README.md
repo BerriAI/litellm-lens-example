@@ -14,3 +14,5 @@ cp .env.example .env
   ```sh
   uv run --env-file .env --package lens-pydantic-ai-swarm swarm/main.py
   ```
+
+The shared gateway transport records each physical request, including SDK retries, and propagates its span context to LiteLLM for spend matching. Set `LITELLM_STREAM=1` to use streaming in either example

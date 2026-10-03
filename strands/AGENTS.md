@@ -1,7 +1,6 @@
 - `initialize()` is enough; `StrandsTelemetry()` is not needed.
 - `OTEL_SEMCONV_STABILITY_OPT_IN` puts message content in span attributes.
-- Strands' `chat` span has no `gen_ai.response.id`, so Lens cannot join spend; the examples wrap `client.chat.completions.create` to set it from the stream chunk `id` (Strands iterates the stream inside the `chat` span, so `trace.get_current_span()` is that span).
-- `openinference-instrumentation-openai` would add a second `llm` span per call (doubling `llm_calls`) and still leave the `chat` span without an id, which nulls trace spend.
+- Pass `gateway_http_client()` into `AsyncOpenAI` so every physical gateway request emits a child span with its gateway call ID, including streaming and retries
 - The `Attempting to instrument while already instrumented` warning is harmless: Strands' tracer calls `ThreadingInstrumentor().instrument()` after `initialize()` already did.
 - `callback_handler=None` stops Strands from also streaming the answer to stdout.
 - Run from `strands/`: `uv run --env-file .env --package lens-strands-<example> <example>/main.py`.

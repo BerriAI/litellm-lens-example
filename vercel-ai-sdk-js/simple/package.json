@@ -1,5 +1,5 @@
 {
-  "name": "lens-vercel-ai-sdk-swarm",
+  "name": "lens-vercel-ai-sdk-simple",
   "private": true,
   "type": "module",
   "dependencies": {
@@ -7,6 +7,7 @@
     "@ai-sdk/otel": "^1.0.127",
     "@opentelemetry/exporter-trace-otlp-proto": "^0.222.0",
     "@opentelemetry/sdk-node": "^0.222.0",
-    "ai": "^7.0.127"
+    "ai": "^7.0.127",
+    "gateway-tracing": "*"
   }
 }
