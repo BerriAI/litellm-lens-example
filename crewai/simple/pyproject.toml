@@ -1,0 +1,10 @@
+[project]
+name = "lens-crewai-simple"
+version = "0.1.0"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "crewai",
+    "openinference-instrumentation-crewai",
+    "opentelemetry-distro",
+    "opentelemetry-exporter-otlp-proto-http",
+]

@@ -1,0 +1,10 @@
+[project]
+name = "lens-google-adk-swarm"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "google-adk",
+    "litellm",
+    "opentelemetry-distro",
+    "opentelemetry-exporter-otlp-proto-http",
+]

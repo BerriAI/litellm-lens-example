@@ -1,3 +1,6 @@
+- npm workspaces: run `npm install` and `node --env-file=.env <example>/main.ts` from this folder.
 - Uses `@opentelemetry/exporter-trace-otlp-proto` to send protobuf; `exporter-trace-otlp-http` sends JSON.
 - `functionId` becomes `gen_ai.agent.name`; the root span is named after the model.
-- `sdk.shutdown()` in `finally` flushes spans before exit.
+- `sdk.shutdown()` in `finally` flushes spans before exit; if export fails it throws from `finally` and masks the model error.
+- Swarm: no native multi-agent primitive; sub-agents are tools whose `execute` calls `generateText` with their own `functionId`. `@ai-sdk/otel` runs `execute` inside the tool span, so sub-agent spans nest under the coordinator's tool call in one trace.
+- Swarm: `generateText` defaults to `stopWhen: isStepCount(1)`, so the coordinator needs `stopWhen: stepCountIs(n)` to continue after tool results.

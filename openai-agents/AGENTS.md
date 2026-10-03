@@ -1,2 +1,4 @@
 - `OpenAIChatCompletionsModel` uses chat completions instead of the default Responses API.
 - The openinference instrumentor replaces the SDK's built-in OpenAI trace exporter, so no `OPENAI_API_KEY` is needed. Do not call `set_tracing_disabled`; it also removes these spans.
+- Run from this folder: `uv run --env-file .env --package lens-openai-agents-<simple|swarm> <simple|swarm>/main.py`.
+- `swarm` uses agents-as-tools (`Agent.as_tool`), not handoffs, so the coordinator stays in control and both specialists run nested under `research_agent` in one trace. Each sub-agent gets its own agent span named after `Agent.name`; the wrapping tool span uses the `as_tool` tool name, kept identical to the agent name.

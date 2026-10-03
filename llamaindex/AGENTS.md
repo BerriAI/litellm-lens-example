@@ -1,3 +1,7 @@
+- Run from `llamaindex/`: `uv run --env-file .env --package lens-llamaindex-<simple|swarm> <simple|swarm>/main.py`.
 - The instrumentor does not export `FunctionAgent.name`, so the agent name comes from `OTEL_RESOURCE_ATTRIBUTES`.
 - `LlamaIndexInstrumentor().instrument()` must run before importing `llama_index`.
 - The doc uses top-level `await`; here it is wrapped in `asyncio.run`.
+- `swarm`: `OTEL_RESOURCE_ATTRIBUTES` is per process, so every span carries `gen_ai.agent.name=research_agent`; `search_agent` and `writer_agent` show up only as `current_agent_name` inside `input.value` of `AgentWorkflow.setup_agent`/`run_agent_step` spans and as `to_agent` in the `handoff` tool call.
+- `swarm`: `AgentWorkflow` requires every agent to have a non-default `name` and `description`, and a `root_agent`. Handoff is one-way; `can_handoff_to=[]` gives `writer_agent` no tools.
+- `FunctionAgent` streams by default, so LLM spans are `OpenAILike.astream_chat`.

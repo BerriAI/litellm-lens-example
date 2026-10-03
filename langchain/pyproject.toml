@@ -1,11 +1,2 @@
-[project]
-name = "lens-langchain"
-version = "0.1.0"
-requires-python = ">=3.13"
-dependencies = [
-    "langchain",
-    "langchain-openai",
-    "openinference-instrumentation-langchain",
-    "opentelemetry-distro",
-    "opentelemetry-exporter-otlp-proto-http",
-]
+[tool.uv.workspace]
+members = ["simple", "swarm"]

@@ -1,3 +1,6 @@
 - `pydantic-ai>=1` is required; without the floor uv resolves 0.8.1.
 - `LiteLLMProvider` passes `api_base` to the OpenAI client as is, so it includes `/v1`.
 - `Agent.instrument_all()` emits `gen_ai.*` spans with full input and output messages.
+- `pyproject.toml` is a uv virtual workspace; run from here with `uv run --env-file .env --package lens-pydantic-ai-<example> <example>/main.py`.
+- `swarm` uses agent delegation: `research_agent` tools call `search_agent.run(...)` / `writer_agent.run(...)`, so each sub-agent's `invoke_agent <name>` span nests under the coordinator's `execute_tool` span in the same trace.
+- Pass `usage=ctx.usage` to delegated runs so sub-agent tokens roll up into the coordinator's usage.

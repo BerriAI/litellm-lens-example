@@ -1,3 +1,7 @@
 - `initialize()` is enough; `StrandsTelemetry()` is not needed.
 - `OTEL_SEMCONV_STABILITY_OPT_IN` puts message content in span attributes.
 - `callback_handler=None` stops Strands from also streaming the answer to stdout.
+- Run from `strands/`: `uv run --env-file .env --package lens-strands-<example> <example>/main.py`.
+- swarm: passing an `Agent` in `tools=[...]` auto-wraps it via `as_tool()`; the tool name is the agent's `name`, and `description` becomes the tool description.
+- swarm: each sub-agent emits its own `invoke_agent <name>` span (with `gen_ai.agent.name`) nested under the coordinator's `execute_tool <name>` span.
+- swarm: `as_tool()` defaults to `preserve_context=False`, so sub-agents start fresh on every call.

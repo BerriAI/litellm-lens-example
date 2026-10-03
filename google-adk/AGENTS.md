@@ -1,3 +1,7 @@
+- Run from this folder: `uv run --env-file .env --package lens-google-adk-<simple|swarm> <simple|swarm>/main.py`.
 - The model goes through the `litellm` package with the `litellm_proxy/` prefix; `api_base` has no `/v1`.
-- `run_debug` prints the answer itself as `research_agent > ...`.
+- `run_debug` prints each agent's answer itself as `<agent name> > ...`.
 - Prompt and answer are recorded on the `call_llm` span as `gcp.vertex.agent.llm_request` and `gcp.vertex.agent.llm_response`, not as `gen_ai.*.messages`.
+- Each agent gets its own `invoke_agent <name>` span with `gen_ai.agent.name`.
+- In swarm, `sub_agents` delegation is LLM-driven via the auto-added `transfer_to_agent` tool; control does not return to the parent, so `search_agent` hands off to its peer `writer_agent` (peer transfer is on by default) and `writer_agent` gives the final answer.
+- The model picks the transfer target from each sub-agent's `description`.

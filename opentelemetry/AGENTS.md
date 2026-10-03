@@ -1,2 +1,4 @@
-- No framework instrumentation: the only span is the manual `research_agent` span with `gen_ai.agent.name`, `openinference.span.kind`, `input.value` and `output.value`.
+- Run from this folder: `uv run --env-file .env --package lens-opentelemetry-<simple|swarm> <simple|swarm>/main.py`.
+- No framework instrumentation: the only spans are manual agent spans with `gen_ai.agent.name`, `openinference.span.kind`, `input.value` and `output.value`.
 - The `openai` client call itself produces no span.
+- `swarm` has no multi-agent primitive to use: `search_agent` and `writer_agent` are child spans nested under the `research_agent` span via `start_as_current_span`, so they share its trace; the coordinator span makes no model call itself.

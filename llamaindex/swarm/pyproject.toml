@@ -1,0 +1,11 @@
+[project]
+name = "lens-llamaindex-swarm"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "llama-index-core",
+    "llama-index-llms-openai-like",
+    "openinference-instrumentation-llama-index",
+    "opentelemetry-distro",
+    "opentelemetry-exporter-otlp-proto-http",
+]

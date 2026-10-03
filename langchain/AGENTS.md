@@ -1,1 +1,4 @@
-- The agent name is the root span name `research_agent`; it is not set as a resource attribute.
+- Each agent's name is the span name of its `create_agent` graph (`research_agent`, etc.); it is not set as a resource attribute.
+- Run from this folder: `uv run --env-file .env --package lens-langchain-<simple|swarm> <simple|swarm>/main.py`.
+- In `swarm`, sub-agents are `create_agent` graphs invoked inside `@tool` functions; LangChain propagates the run config through contextvars, so `search_agent`/`writer_agent` spans nest under the `search`/`write` tool spans of `research_agent` without passing `config`.
+- Tool names (`search`, `write`) are distinct from agent names so tool spans and agent spans don't share a name.
