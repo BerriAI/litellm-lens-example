@@ -1,0 +1,10 @@
+- npm workspaces: run `npm install` and `node --env-file=.env <example>/main.ts` from this folder.
+- Mastra's model router (`"openai/<model>"` or `{ id, url, apiKey }`) has no `fetch` option, so the examples pass an `@ai-sdk/openai-compatible` model built with the shared `gatewayFetch`; Mastra accepts AI SDK `LanguageModelV3` objects directly.
+- `@mastra/otel-bridge` (experimental) creates real OTEL spans under `NodeSDK`; `@mastra/otel-exporter` would export Mastra's own spans and leave `gateway.request` orphaned, so the bridge is used instead.
+- The bridge uses tracer scope `@mastra/otel-bridge` and span names `invoke_agent <id>`, `model_generation <model>`, `agent_step <id>`, `chat <model>`, `execute_tool <tool>`; `mastra.span.type` carries the Mastra span type.
+- `gateway.request` nests under `agent_step`, as a sibling of `chat`, because the bridge does not run the model call inside the `chat` span's OTEL context. Only `chat` carries `gen_ai.usage.*`.
+- `excludeSpanTypes: [SpanType.MODEL_CHUNK, SpanType.PROCESSOR_RUN]` drops per-chunk and processor spans; `SpanType` is exported from `@mastra/core/observability`, not `@mastra/observability`.
+- `@opentelemetry/api` must be a single hoisted copy: `gateway-tracing` captures its tracer at import time, so a second copy under `mastra/node_modules` yields a no-op tracer and no `gateway.request` spans. Install from the repo root, never inside `mastra/`.
+- `mastra.shutdown()` then `sdk.shutdown()` in `finally` flush spans; an export failure throws from `finally` and masks the model error.
+- Swarm: subagents go in the parent's `agents` map and are exposed as tools named `agent-<key>` (`execute_tool agent-searchAgent`); the subagent's `invoke_agent` nests under that tool span in one trace. `generate` needs `maxSteps` above 1 to continue after delegations.
+- Without `storage`, Mastra logs an in-memory store warning; it is harmless for these one-shot runs.

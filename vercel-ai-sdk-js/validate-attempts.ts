@@ -34,7 +34,7 @@ const transport: typeof fetch = async (input, init) => {
 };
 const model = createOpenAICompatible({
   name: "litellm", baseURL: `${process.env.LITELLM_GATEWAY_URL}/v1`, apiKey: process.env.LITELLM_API_KEY,
-  fetch: createGatewayFetch(transport),
+  fetch: createGatewayFetch({ transport }),
 })(process.env.LITELLM_MODEL!);
 try {
   const options = { model, prompt: "Reply with one short sentence about agent traces.", maxRetries: scenario === "retry" ? 1 : 0,

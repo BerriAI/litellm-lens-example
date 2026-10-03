@@ -1,5 +1,6 @@
 - Run from this folder: `uv run --env-file .env --package lens-opentelemetry-<simple|swarm> <simple|swarm>/main.py`.
 - No agent framework: agent spans are manual, with `gen_ai.agent.name`, `openinference.span.kind`, `input.value` and `output.value`.
-- `openinference-instrumentation-openai` (loaded by `initialize()`) adds the model-call span; its `output.value` response `id` is what joins spend.
+- `openinference-instrumentation-openai` (loaded by `initialize()`) adds the model-call span and keeps it current during the request, so the shared `gateway_sync_http_client()` transport's `gateway.request` span nests under `ChatCompletion` with the gateway call ID (see `shared/README.md`). The `output.value` response `id` remains a fallback join key.
+- The examples use the sync `OpenAI` client, so they take the sync transport; `gateway_http_client()` is the async one.
 - `opentelemetry-instrumentation-openai-v2` 2.4b0 is skipped by `initialize()`: it imports `httpx` (openai 3 ships `httpx2`) and `opentelemetry.util.genai.instruments` (renamed in util-genai 1.2b0).
 - `swarm` has no multi-agent primitive to use: `search_agent` and `writer_agent` are child spans nested under the `research_agent` span via `start_as_current_span`, so they share its trace; the coordinator span makes no model call itself.

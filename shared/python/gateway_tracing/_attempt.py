@@ -6,6 +6,8 @@ from opentelemetry import trace
 from opentelemetry.trace import Span, SpanKind, Status, StatusCode
 from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
 
+from . import contract
+
 
 @dataclass(slots=True)
 class Attempt:
@@ -15,7 +17,7 @@ class Attempt:
     def response(self, status: int, call_id: str | None) -> None:
         self.span.set_attribute("http.response.status_code", status)
         if call_id:
-            self.span.set_attribute("litellm.call_id", call_id)
+            self.span.set_attribute(contract.CALL_ID_ATTRIBUTE, call_id)
         if status >= 400:
             self.span.set_status(Status(StatusCode.ERROR))
 
@@ -37,7 +39,9 @@ class Attempt:
 def begin(base_url: str, method: str, url: str) -> Attempt | None:
     base: Final = urlsplit(base_url)
     target: Final = urlsplit(url)
-    if method != "POST" or (base.scheme, base.hostname, base.port) != (target.scheme, target.hostname, target.port):
+    if method != contract.METHOD:
+        return None
+    if (base.scheme, base.hostname, base.port) != (target.scheme, target.hostname, target.port):
         return None
     if not target.path.startswith(base.path.rstrip("/") + "/"):
         return None
@@ -45,11 +49,11 @@ def begin(base_url: str, method: str, url: str) -> Attempt | None:
     authority: Final = f"[{hostname}]" if ":" in hostname else hostname
     netloc: Final = f"{authority}:{target.port}" if target.port is not None else authority
     sanitized: Final = urlunsplit((target.scheme, netloc, target.path, "", ""))
-    span: Final = trace.get_tracer("litellm.gateway.client").start_span(
-        "gateway.request",
+    span: Final = trace.get_tracer(contract.SCOPE).start_span(
+        contract.SPAN_NAME,
         kind=SpanKind.CLIENT,
         attributes={
-            "litellm.gateway.attempt": True,
+            contract.ATTEMPT_ATTRIBUTE: True,
             "http.request.method": method,
             "url.full": sanitized,
             "server.address": hostname,

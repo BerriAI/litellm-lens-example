@@ -1,46 +1,99 @@
 # Claude Agent SDK
 
-Send Claude Agent SDK traces to [LiteLLM Lens](https://docs.litellm.ai/docs/proxy/lens).
+Send Claude Agent SDK traces to [LiteLLM Lens](https://docs.litellm.ai/docs/proxy/lens) using the runnable examples in this repository.
 
-- [Observability](https://code.claude.com/docs/en/agent-sdk/observability)
+## Prerequisites
 
-```sh
+You need a LiteLLM gateway with [tracing enabled](https://docs.litellm.ai/docs/proxy/lens#configure-an-existing-proxy), a LiteLLM key, and a configured model alias. The swarm example needs a model that supports tool calls. A Lens worker is required for investigations; viewing traces does not require one.
+
+Install uv. It uses the checked-in Python version and resolves each example’s dependencies from its uv workspace.
+
+## Configuration
+
+For a fresh checkout:
+
+```bash
+git clone https://github.com/BerriAI/litellm-lens-example.git
+cd litellm-lens-example/claude-agent-sdk
 cp .env.example .env
 ```
 
-- `simple`: one `research_agent` answering a question.
-  ```sh
-  uv run --env-file .env --package lens-claude-agent-sdk-simple simple/main.py
-  ```
-- `swarm`: `research_agent` delegating to `search_agent` and `writer_agent` subagents.
-  ```sh
-  uv run --env-file .env --package lens-claude-agent-sdk-swarm swarm/main.py
-  ```
+If you already cloned the repository, run the remaining commands from `claude-agent-sdk/`. Copy [.env.example](.env.example) to `.env` if it does not exist, then set:
 
-To link model spans to spend logs, start the local adapter in a separate terminal. It adds the actual Anthropic message ID as the `request-id` response header, which the CLI records on its model spans. Streaming response bytes pass through unchanged
+| Variable | Value |
+| --- | --- |
+| `LITELLM_GATEWAY_URL` | Your gateway’s base URL without a trailing slash or `/v1`, for example `http://localhost:4002` |
+| `LITELLM_API_KEY` | Your LiteLLM key |
+| `LITELLM_MODEL` | A model alias configured on your gateway |
 
-```sh
-LITELLM_GATEWAY_URL=http://localhost:4002 \
-MOCK_LITELLM_GATEWAY_URL=http://localhost:4318 \
-uv run --package lens-claude-agent-sdk-simple gateway.py
+The checked-in values target a local development gateway. Replace them for your deployment. Keep the exporter settings from `.env.example`; the examples configure their trace exporters in code. They send traces to `LITELLM_GATEWAY_URL/v1/traces` with the LiteLLM key as a bearer token.
+
+Leave `MOCK_LITELLM_GATEWAY_URL` unset unless you intend to send an additional trace copy to the local [recorder](../recorder/AGENTS.md).
+
+## Run an example
+
+### Simple agent
+
+A `research_agent` answers one question.
+
+```bash
+uv run --env-file .env --package lens-claude-agent-sdk-simple simple/main.py
 ```
 
-Run the examples against the adapter. Keep `MOCK_LITELLM_GATEWAY_URL` empty here because the adapter already copies SDK and CLI trace exports to the recorder and forwards them to port 4002
+See [simple/main.py](simple/main.py) for the implementation.
 
-```sh
-LITELLM_GATEWAY_URL=http://localhost:4319 \
-LITELLM_MODEL=openai/gpt-6-luna \
-MOCK_LITELLM_GATEWAY_URL= \
-uv run --env-file .env --package lens-claude-agent-sdk-simple simple/main.py
+### Agent swarm
 
-LITELLM_GATEWAY_URL=http://localhost:4319 \
-LITELLM_MODEL=openai/gpt-6-luna \
-MOCK_LITELLM_GATEWAY_URL= \
+A coordinator delegates to `search_agent` and `writer_agent` subagents.
+
+```bash
 uv run --env-file .env --package lens-claude-agent-sdk-swarm swarm/main.py
 ```
 
-The recorder is optional. Omit its environment variable when only sending to LiteLLM. The adapter binds to localhost, and `CLAUDE_GATEWAY_PORT` changes its default port 4319
+See [swarm/main.py](swarm/main.py) for the implementation.
 
-```sh
+## Verify the trace
+
+After the example prints its answer, open **Lens > Traces** on your gateway and select the new run. Look for the run associated with `research_agent`. Inspect the input, output, and model spans. For the swarm, inspect the specialist activity described above; its exact span layout depends on the framework.
+
+## How tracing works
+
+OpenInference records SDK query and tool spans. The bundled CLI also exports its model and tool spans using the tracing environment configured in the example. Model calls use the gateway’s Anthropic messages endpoint.
+
+## Troubleshooting
+
+If model calls fail, check the gateway URL, key, and model alias. If an answer appears but the trace is missing, check the terminal for exporter errors and confirm tracing is enabled on the same gateway. A model call succeeding does not confirm that its trace export succeeded.
+
+The swarm example uses bypassPermissions for its configured Agent tool. Review the example before adding tools that can modify files or run commands.
+
+## Match model calls to spend
+
+The local [adapter](gateway.py) adds the actual Anthropic message ID as the `request-id` response header, which the CLI records on its model spans. Streaming response bytes pass through unchanged.
+
+Start it in a separate terminal from `claude-agent-sdk/`, using the gateway configured in `.env`:
+
+```bash
+uv run --env-file .env --package lens-claude-agent-sdk-simple gateway.py
+```
+
+Run the examples against the adapter. Keep `MOCK_LITELLM_GATEWAY_URL` empty for these commands because the adapter handles any additional recorder export:
+
+```bash
+LITELLM_GATEWAY_URL=http://localhost:4319 MOCK_LITELLM_GATEWAY_URL= \
+  uv run --env-file .env --package lens-claude-agent-sdk-simple simple/main.py
+
+LITELLM_GATEWAY_URL=http://localhost:4319 MOCK_LITELLM_GATEWAY_URL= \
+  uv run --env-file .env --package lens-claude-agent-sdk-swarm swarm/main.py
+```
+
+The adapter binds to localhost. `CLAUDE_GATEWAY_PORT` changes its default port `4319`; update the example URL to match. To copy trace exports to the optional recorder, set `MOCK_LITELLM_GATEWAY_URL=http://localhost:4318` when starting the adapter.
+
+Run the adapter checks from this folder:
+
+```bash
 uv run --package lens-claude-agent-sdk-simple python -m unittest discover -s . -p test_gateway.py
 ```
+
+## References
+
+[Claude Agent SDK observability](https://code.claude.com/docs/en/agent-sdk/observability).

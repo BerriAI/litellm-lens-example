@@ -12,11 +12,13 @@ for url in filter(None, [os.environ["LITELLM_GATEWAY_URL"], os.environ.get("MOCK
     exporter = OTLPSpanExporter(f"{url}/v1/traces", headers=headers)
     trace.get_tracer_provider().add_span_processor(BatchSpanProcessor(exporter))
 
+from gateway_tracing.httpx2 import gateway_sync_http_client
 from openai import OpenAI
 
 client = OpenAI(
     base_url=f"{os.environ['LITELLM_GATEWAY_URL']}/v1",
     api_key=os.environ["LITELLM_API_KEY"],
+    http_client=gateway_sync_http_client(f"{os.environ['LITELLM_GATEWAY_URL']}/v1"),
 )
 tracer = trace.get_tracer(__name__)
 

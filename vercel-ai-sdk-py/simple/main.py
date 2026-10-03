@@ -14,12 +14,33 @@ for url in filter(None, [os.environ["LITELLM_GATEWAY_URL"], os.environ.get("MOCK
     trace.get_tracer_provider().add_span_processor(BatchSpanProcessor(exporter))
 
 import ai
+from ai import experimental_telemetry as telemetry
 from ai.experimental_telemetry import otel
 from ai.providers.openai import OpenAIChatCompletionsProtocol
 from gateway_tracing.httpx2 import gateway_http_client
 from openai import AsyncOpenAI
 
-ai.experimental_telemetry.register(otel.OtelAdapter(capture_content=True))
+
+class GatewayOtelAdapter(otel.OtelAdapter):
+    """Nest `gateway.request` spans under the model call span.
+
+    ai keeps its model call span out of the current context because the span stays open while the loop dispatches
+    tools. Making it current, and parenting framework spans explicitly, keeps the framework tree intact while the HTTP
+    client's spans attach to the model call instead of the loop turn.
+    """
+
+    def _parent_context(self, span):
+        if span.parent_id in self._live:
+            return trace.set_span_in_context(self._live[span.parent_id])
+        return super()._parent_context(span)
+
+    def __call__(self, span):
+        if isinstance(span.data, telemetry.AiStreamSpanData):
+            span.set_as_current = True
+        return super().__call__(span)
+
+
+ai.experimental_telemetry.register(GatewayOtelAdapter(capture_content=True))
 
 http_client = gateway_http_client(f"{os.environ['LITELLM_GATEWAY_URL']}/v1")
 client = AsyncOpenAI(

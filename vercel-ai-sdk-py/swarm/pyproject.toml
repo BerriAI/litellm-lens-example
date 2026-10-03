@@ -11,4 +11,4 @@ dependencies = [
 ]
 
 [tool.uv.sources]
-gateway-tracing = { path = "../../shared/python" }
+gateway-tracing = { path = "../../shared/python", editable = true }

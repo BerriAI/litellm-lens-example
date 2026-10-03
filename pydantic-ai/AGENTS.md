@@ -7,3 +7,4 @@
 - `pyproject.toml` is a uv virtual workspace; run from here with `uv run --env-file .env --package lens-pydantic-ai-<example> <example>/main.py`.
 - `swarm` uses agent delegation: `research_agent` tools call `search_agent.run(...)` / `writer_agent.run(...)`, so each sub-agent's `invoke_agent <name>` span nests under the coordinator's `execute_tool` span in the same trace.
 - Pass `usage=ctx.usage` to delegated runs so sub-agent tokens roll up into the coordinator's usage.
+- https://pydantic.dev/docs/ai/integrations/logfire.md

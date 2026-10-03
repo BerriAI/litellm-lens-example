@@ -1,12 +1,12 @@
-# OpenAI Agents SDK
+# Mastra
 
-Send OpenAI Agents SDK traces to [LiteLLM Lens](https://docs.litellm.ai/docs/proxy/lens) using the runnable examples in this repository.
+Send Mastra traces to [LiteLLM Lens](https://docs.litellm.ai/docs/proxy/lens) using the runnable examples in this repository.
 
 ## Prerequisites
 
 You need a LiteLLM gateway with [tracing enabled](https://docs.litellm.ai/docs/proxy/lens#configure-an-existing-proxy), a LiteLLM key, and a configured model alias. The swarm example needs a model that supports tool calls. A Lens worker is required for investigations; viewing traces does not require one.
 
-Install uv. It uses the checked-in Python version and resolves each example’s dependencies from its uv workspace.
+Use Node.js with built-in TypeScript support and npm. Install dependencies from the repository root so the shared npm workspaces are available.
 
 ## Configuration
 
@@ -14,11 +14,13 @@ For a fresh checkout:
 
 ```bash
 git clone https://github.com/BerriAI/litellm-lens-example.git
-cd litellm-lens-example/openai-agents
+cd litellm-lens-example
+npm install
+cd mastra
 cp .env.example .env
 ```
 
-If you already cloned the repository, run the remaining commands from `openai-agents/`. Copy [.env.example](.env.example) to `.env` if it does not exist, then set:
+If you already cloned the repository, run the remaining commands from `mastra/`. Run `npm install` from the repository root if you have not installed the workspace dependencies. Copy [.env.example](.env.example) to `.env` if it does not exist, then set:
 
 | Variable | Value |
 | --- | --- |
@@ -34,31 +36,31 @@ Leave `MOCK_LITELLM_GATEWAY_URL` unset unless you intend to send an additional t
 
 ### Simple agent
 
-A `research_agent` answers one question inside `research_workflow`.
+A `research_agent` answers one question.
 
 ```bash
-uv run --env-file .env --package lens-openai-agents-simple simple/main.py
+node --env-file=.env simple/main.ts
 ```
 
-See [simple/main.py](simple/main.py) for the implementation.
+See [simple/main.ts](simple/main.ts) for the implementation.
 
 ### Agent swarm
 
-A coordinator invokes `search_agent` and `writer_agent` through agents-as-tools.
+A coordinator delegates to `search_agent` and `writer_agent` subagents.
 
 ```bash
-uv run --env-file .env --package lens-openai-agents-swarm swarm/main.py
+node --env-file=.env swarm/main.ts
 ```
 
-See [swarm/main.py](swarm/main.py) for the implementation.
+See [swarm/main.ts](swarm/main.ts) for the implementation.
 
 ## Verify the trace
 
-After the example prints its answer, open **Lens > Traces** on your gateway and select the new run. Look for `research_workflow` and its `research_agent` span. Inspect the input, output, and model spans. For the swarm, inspect the specialist activity described above; its exact span layout depends on the framework.
+After the example prints its answer, open **Lens > Traces** on your gateway and select the new run. Look for the run associated with `research_agent`. Inspect the input, output, and model spans. For the swarm, inspect the specialist activity described above; its exact span layout depends on the framework.
 
 ## How tracing works
 
-OpenInference exports SDK agent and Responses API spans to LiteLLM. The shared gateway transport records each physical model request and its gateway call ID, including retries.
+Mastra’s OtelBridge converts agent, step, model, and tool spans into OpenTelemetry spans exported by the NodeSDK. The shared gateway fetch records request attempts and gateway call IDs.
 
 See the [shared gateway transport](../shared/README.md) for request-attempt and spend-correlation details.
 
@@ -66,4 +68,8 @@ See the [shared gateway transport](../shared/README.md) for request-attempt and 
 
 If model calls fail, check the gateway URL, key, and model alias. If an answer appears but the trace is missing, check the terminal for exporter errors and confirm tracing is enabled on the same gateway. A model call succeeding does not confirm that its trace export succeeded.
 
-Use a gateway model alias that supports the Responses API and tool calls.
+Install npm dependencies from the repository root so all workspaces use the same OpenTelemetry API instance. An in-memory storage warning is expected for these one-shot examples.
+
+## References
+
+[Mastra OpenTelemetry integration](https://mastra.ai/integrations/observability/opentelemetry).

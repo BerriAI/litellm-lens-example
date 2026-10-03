@@ -5,3 +5,4 @@
 - The agent name appears as `graph.node.id` and in the `<role>._execute_core` span name (e.g. `research_agent._execute_core`).
 - `swarm` uses a sequential crew with one task per agent, not `Process.hierarchical`: hierarchical delegation runs coworkers through `Agent.execute_task`, which the instrumentation does not wrap, so coworker names only show up inside the `Delegate work to coworker.run` tool span input.
 - In a sequential crew, `graph.node.parent_id` is the previous agent in `Crew(agents=[...])` order, not the task flow.
+- The shared `gateway_tracing` transport does not fit: `LLM(client_params={"http_client": ...})` is passed to both the sync and async OpenAI clients, and `AsyncOpenAI` rejects an `httpx.Client`. Spend joins through the response id in the `ChatCompletion` span instead.

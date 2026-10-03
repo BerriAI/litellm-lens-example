@@ -4,11 +4,11 @@
   "type": "module",
   "dependencies": {
     "@ai-sdk/openai-compatible": "^3.0.62",
-    "@mastra/core": "latest",
-    "@mastra/observability": "latest",
-    "@mastra/otel-bridge": "latest",
+    "@mastra/core": "^1.74.0",
+    "@mastra/observability": "^1.18.3",
+    "@mastra/otel-bridge": "^1.5.13",
     "@opentelemetry/exporter-trace-otlp-proto": "^0.222.0",
     "@opentelemetry/sdk-node": "^0.222.0",
-    "zod": "latest"
+    "gateway-tracing": "*"
   }
 }

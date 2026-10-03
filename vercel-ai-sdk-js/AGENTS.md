@@ -1,4 +1,4 @@
-- npm workspaces: run `npm install` and `node --env-file=.env <example>/main.ts` from this folder.
+- The repo root `package.json` is the npm workspace root; `npm install` here or at the root installs everything into the root `node_modules`, and `gateway-tracing` resolves to `shared/js`. Run `node --env-file=.env <example>/main.ts` from this folder.
 - Uses `@opentelemetry/exporter-trace-otlp-proto` to send protobuf; `exporter-trace-otlp-http` sends JSON.
 - `functionId` becomes `gen_ai.agent.name`, but `@ai-sdk/otel` names agent spans `invoke_agent <model>` with no option to change it; the `nameAgentSpans` processor renames them to `invoke_agent <functionId>`.
 - `@ai-sdk/otel` uses tracer scope `gen_ai`, so Lens shows no framework.

@@ -13,6 +13,7 @@ for url in filter(None, [os.environ["LITELLM_GATEWAY_URL"], os.environ.get("MOCK
     trace.get_tracer_provider().add_span_processor(BatchSpanProcessor(exporter))
 
 from agents import Agent, OpenAIResponsesModel, RunConfig, Runner
+from gateway_tracing.httpx2 import gateway_http_client
 from openai import AsyncOpenAI
 
 model = OpenAIResponsesModel(
@@ -20,6 +21,7 @@ model = OpenAIResponsesModel(
     openai_client=AsyncOpenAI(
         base_url=f"{os.environ['LITELLM_GATEWAY_URL']}/v1",
         api_key=os.environ["LITELLM_API_KEY"],
+        http_client=gateway_http_client(f"{os.environ['LITELLM_GATEWAY_URL']}/v1"),
     ),
 )
 

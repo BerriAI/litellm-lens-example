@@ -1,16 +1,67 @@
 # OpenTelemetry
 
-Send OpenTelemetry traces to [LiteLLM Lens](https://docs.litellm.ai/docs/proxy/lens).
+Send OpenTelemetry traces to [LiteLLM Lens](https://docs.litellm.ai/docs/proxy/lens) using the runnable examples in this repository.
 
-```sh
+## Prerequisites
+
+You need a LiteLLM gateway with [tracing enabled](https://docs.litellm.ai/docs/proxy/lens#configure-an-existing-proxy), a LiteLLM key, and a configured model alias. A Lens worker is required for investigations; viewing traces does not require one.
+
+Install uv. It uses the checked-in Python version and resolves each example’s dependencies from its uv workspace.
+
+## Configuration
+
+For a fresh checkout:
+
+```bash
+git clone https://github.com/BerriAI/litellm-lens-example.git
+cd litellm-lens-example/opentelemetry
 cp .env.example .env
 ```
 
-- `simple`: a single manual `research_agent` span wrapping one OpenAI call.
-  ```sh
-  uv run --env-file .env --package lens-opentelemetry-simple simple/main.py
-  ```
-- `swarm`: a `research_agent` span delegating to `search_agent` and `writer_agent` child spans, each making its own OpenAI call.
-  ```sh
-  uv run --env-file .env --package lens-opentelemetry-swarm swarm/main.py
-  ```
+If you already cloned the repository, run the remaining commands from `opentelemetry/`. Copy [.env.example](.env.example) to `.env` if it does not exist, then set:
+
+| Variable | Value |
+| --- | --- |
+| `LITELLM_GATEWAY_URL` | Your gateway’s base URL without a trailing slash or `/v1`, for example `http://localhost:4002` |
+| `LITELLM_API_KEY` | Your LiteLLM key |
+| `LITELLM_MODEL` | A model alias configured on your gateway |
+
+The checked-in values target a local development gateway. Replace them for your deployment. Keep the exporter settings from `.env.example`; the examples configure their trace exporters in code. They send traces to `LITELLM_GATEWAY_URL/v1/traces` with the LiteLLM key as a bearer token.
+
+Leave `MOCK_LITELLM_GATEWAY_URL` unset unless you intend to send an additional trace copy to the local [recorder](../recorder/AGENTS.md).
+
+## Run an example
+
+### Simple agent
+
+A manual `research_agent` span wraps one OpenAI model call.
+
+```bash
+uv run --env-file .env --package lens-opentelemetry-simple simple/main.py
+```
+
+See [simple/main.py](simple/main.py) for the implementation.
+
+### Agent swarm
+
+A `research_agent` span contains `search_agent` and `writer_agent` child spans, each making a model call.
+
+```bash
+uv run --env-file .env --package lens-opentelemetry-swarm swarm/main.py
+```
+
+See [swarm/main.py](swarm/main.py) for the implementation.
+
+## Verify the trace
+
+After the example prints its answer, open **Lens > Traces** on your gateway and select the new run. Look for the run associated with `research_agent`. Inspect the input, output, and model spans. For the swarm, inspect the specialist activity described above; its exact span layout depends on the framework.
+
+## How tracing works
+
+The examples create agent spans manually and set their names, inputs, and outputs. OpenInference instruments the OpenAI client, and the shared gateway transport adds request-attempt spans with gateway call IDs.
+
+See the [shared gateway transport](../shared/README.md) for request-attempt and spend-correlation details.
+
+## Troubleshooting
+
+If model calls fail, check the gateway URL, key, and model alias. If an answer appears but the trace is missing, check the terminal for exporter errors and confirm tracing is enabled on the same gateway. A model call succeeding does not confirm that its trace export succeeded.

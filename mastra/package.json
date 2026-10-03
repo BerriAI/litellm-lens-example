@@ -1,13 +1,8 @@
 {
   "name": "lens-mastra",
   "private": true,
-  "workspaces": [
-    "simple",
-    "swarm"
-  ],
+  "type": "module",
   "dependencies": {
-    "@opentelemetry/api": "1.9.1",
-    "gateway-tracing": "file:../shared/js"
-  },
-  "type": "module"
+    "gateway-tracing": "*"
+  }
 }

@@ -9,3 +9,4 @@
 - Each model call yields three `llm` spans: `OpenAILike._prepare_chat_with_tools`, an outer `achat`, and a nested `achat` that holds the messages and token counts. None records the response `id`, so Lens cannot join spend.
 - The instrumentor never attaches its spans to the OTel context, so `openinference-instrumentation-openai` spans land in separate root traces; don't add it.
 - The root span input is the workflow's `init_state`/`start_event`; `user_msg` is not recorded there.
+- Do not pass the shared `gateway_tracing` client as `http_client`/`async_http_client`: the OpenInference LlamaIndex handler never attaches the LLM span to the current context, so `gateway.request` spans land in a separate trace (verified with a mock transport). Spend joins through the response id in the LLM span instead.

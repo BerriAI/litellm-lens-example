@@ -3,8 +3,12 @@ name = "lens-opentelemetry-simple"
 version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
+    "gateway-tracing[httpx2]",
     "openai",
     "openinference-instrumentation-openai",
     "opentelemetry-distro",
     "opentelemetry-exporter-otlp-proto-http",
 ]
+
+[tool.uv.sources]
+gateway-tracing = { path = "../../shared/python", editable = true }

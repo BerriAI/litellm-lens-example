@@ -2,6 +2,7 @@ import { NodeSDK, tracing } from "@opentelemetry/sdk-node";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
 import { Mastra } from "@mastra/core";
 import { Agent } from "@mastra/core/agent";
+import { SpanType } from "@mastra/core/observability";
 import { Observability } from "@mastra/observability";
 import { OtelBridge } from "@mastra/otel-bridge";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
@@ -48,7 +49,13 @@ const researchAgent = new Agent({
 const mastra = new Mastra({
   agents: { researchAgent, searchAgent, writerAgent },
   observability: new Observability({
-    configs: { default: { serviceName: "lens-mastra-swarm", bridge: new OtelBridge() } },
+    configs: {
+      default: {
+        serviceName: "lens-mastra-swarm",
+        bridge: new OtelBridge(),
+        excludeSpanTypes: [SpanType.MODEL_CHUNK, SpanType.PROCESSOR_RUN],
+      },
+    },
   }),
 });
 

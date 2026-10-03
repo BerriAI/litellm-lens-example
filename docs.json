@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "pages": [
+    {
+      "source": "deepagents/README.md",
+      "slug": "/integrations/deepagents",
+      "title": "DeepAgents",
+      "description": "Run DeepAgents examples and send their agent traces to LiteLLM Lens.",
+      "category": "integrations"
+    },
+    {
+      "source": "langgraph/README.md",
+      "slug": "/integrations/langgraph",
+      "title": "LangGraph",
+      "description": "Run LangGraph examples and send their agent traces to LiteLLM Lens.",
+      "category": "integrations"
+    },
+    {
+      "source": "langchain/README.md",
+      "slug": "/integrations/langchain",
+      "title": "LangChain",
+      "description": "Run LangChain examples and send their agent traces to LiteLLM Lens.",
+      "category": "integrations"
+    },
+    {
+      "source": "openai-agents/README.md",
+      "slug": "/integrations/openai-agents",
+      "title": "OpenAI Agents SDK",
+      "description": "Run OpenAI Agents SDK examples and send their agent traces to LiteLLM Lens.",
+      "category": "integrations"
+    },
+    {
+      "source": "claude-agent-sdk/README.md",
+      "slug": "/integrations/claude-agent-sdk",
+      "title": "Claude Agent SDK",
+      "description": "Run Claude Agent SDK examples and send their agent traces to LiteLLM Lens.",
+      "category": "integrations"
+    },
+    {
+      "source": "crewai/README.md",
+      "slug": "/integrations/crewai",
+      "title": "CrewAI",
+      "description": "Run CrewAI examples and send their agent traces to LiteLLM Lens.",
+      "category": "integrations"
+    },
+    {
+      "source": "pydantic-ai/README.md",
+      "slug": "/integrations/pydantic-ai",
+      "title": "Pydantic AI",
+      "description": "Run Pydantic AI examples and send their agent traces to LiteLLM Lens.",
+      "category": "integrations"
+    },
+    {
+      "source": "llamaindex/README.md",
+      "slug": "/integrations/llamaindex",
+      "title": "LlamaIndex",
+      "description": "Run LlamaIndex examples and send their agent traces to LiteLLM Lens.",
+      "category": "integrations"
+    },
+    {
+      "source": "google-adk/README.md",
+      "slug": "/integrations/google-adk",
+      "title": "Google ADK",
+      "description": "Run Google ADK examples and send their agent traces to LiteLLM Lens.",
+      "category": "integrations"
+    },
+    {
+      "source": "strands/README.md",
+      "slug": "/integrations/strands",
+      "title": "Strands Agents",
+      "description": "Run Strands Agents examples and send their agent traces to LiteLLM Lens.",
+      "category": "integrations"
+    },
+    {
+      "source": "vercel-ai-sdk-js/README.md",
+      "slug": "/integrations/vercel-ai-sdk-js",
+      "title": "Vercel AI SDK (TypeScript)",
+      "description": "Run Vercel AI SDK (TypeScript) examples and send their agent traces to LiteLLM Lens.",
+      "category": "integrations"
+    },
+    {
+      "source": "vercel-ai-sdk-py/README.md",
+      "slug": "/integrations/vercel-ai-sdk-py",
+      "title": "Vercel AI SDK (Python)",
+      "description": "Run Vercel AI SDK (Python) examples and send their agent traces to LiteLLM Lens.",
+      "category": "integrations"
+    },
+    {
+      "source": "mastra/README.md",
+      "slug": "/integrations/mastra",
+      "title": "Mastra",
+      "description": "Run Mastra examples and send their agent traces to LiteLLM Lens.",
+      "category": "integrations"
+    },
+    {
+      "source": "opentelemetry/README.md",
+      "slug": "/integrations/opentelemetry",
+      "title": "OpenTelemetry",
+      "description": "Run OpenTelemetry examples and send their agent traces to LiteLLM Lens.",
+      "category": "integrations"
+    },
+    {
+      "source": "claude-code/README.md",
+      "slug": "/coding-agents/claude-code",
+      "title": "Claude Code",
+      "description": "Connect personal Claude Code sessions to LiteLLM Lens using the maintained setup guides.",
+      "category": "coding-agents"
+    },
+    {
+      "source": "codex/README.md",
+      "slug": "/coding-agents/codex",
+      "title": "Codex",
+      "description": "Connect personal Codex sessions to LiteLLM Lens using the maintained setup guides.",
+      "category": "coding-agents"
+    }
+  ]
+}

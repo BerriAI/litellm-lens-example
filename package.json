@@ -5,7 +5,9 @@
   "workspaces": [
     "shared/js",
     "vercel-ai-sdk-js",
-    "vercel-ai-sdk-js/*"
+    "vercel-ai-sdk-js/*",
+    "mastra",
+    "mastra/*"
   ],
   "scripts": {
     "test": "npm test --workspaces --if-present"
