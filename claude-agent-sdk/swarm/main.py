@@ -37,6 +37,10 @@ options = ClaudeAgentOptions(
     env={
         "ANTHROPIC_BASE_URL": os.environ["LITELLM_GATEWAY_URL"],
         "ANTHROPIC_AUTH_TOKEN": os.environ["LITELLM_API_KEY"],
+        "OTEL_EXPORTER_OTLP_HEADERS": f"Authorization=Bearer {os.environ['LITELLM_API_KEY']}",
+        "OTEL_LOG_USER_PROMPTS": "1",
+        "ENABLE_BETA_TRACING_DETAILED": "1",
+        "BETA_TRACING_ENDPOINT": os.environ["LITELLM_GATEWAY_URL"],
     },
 )
 

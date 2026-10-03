@@ -3,6 +3,7 @@ name = "lens-claude-agent-sdk-simple"
 version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
+    "pydantic",
     "claude-agent-sdk",
     "openinference-instrumentation-claude-agent-sdk",
     "opentelemetry-distro",
