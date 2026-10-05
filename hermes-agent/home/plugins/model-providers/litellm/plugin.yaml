@@ -1,0 +1,4 @@
+name: litellm-provider
+kind: model-provider
+version: 0.1.0
+description: LiteLLM gateway with request-attempt spans for LiteLLM Lens

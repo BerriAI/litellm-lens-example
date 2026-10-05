@@ -60,6 +60,15 @@ Set `LITELLM_STREAM=1` to enable streaming in either example:
 LITELLM_STREAM=1 uv run --env-file .env --package lens-google-adk-simple simple/main.py
 ```
 
+### Request attempt validation
+
+`validate_attempts.py` runs the simple agent through a fault-injecting `httpx` transport passed to `gateway_http_client(transport=...)` to check how billed attempts correlate. `retry` turns the first successful gateway response into a 503 after its body was read, so the OpenAI client retries once and the trace holds two `gateway.request` spans with two spend rows. `response-loss` keeps the real status and headers but fails the body stream, so the single billed attempt is recorded as a client error while its spend still resolves.
+
+```bash
+uv run --env-file .env --package lens-google-adk-simple validate_attempts.py retry
+uv run --env-file .env --package lens-google-adk-simple validate_attempts.py response-loss
+```
+
 ## Verify the trace
 
 After the example prints its answer, open **Lens > Traces** on your gateway and select the new run. Look for the run associated with `research_agent`. Inspect the input, output, and model spans. For the swarm, inspect the specialist activity described above; its exact span layout depends on the framework.

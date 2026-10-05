@@ -60,6 +60,17 @@ Set `LITELLM_STREAM=1` to enable streaming in either example:
 LITELLM_STREAM=1 uv run --env-file .env --package lens-pydantic-ai-simple simple/main.py
 ```
 
+## Validate attempts
+
+`validate_attempts.py` runs the simple agent through a fault-injecting transport wrapped by `gateway_http_client(base_url, transport=...)`:
+
+```bash
+uv run --env-file .env --package lens-pydantic-ai-simple validate_attempts.py retry
+uv run --env-file .env --package lens-pydantic-ai-simple validate_attempts.py response-loss
+```
+
+The retry scenario replaces the first real billed response with a client-side HTTP 503 so the OpenAI client (`max_retries=1`) retries once: two `gateway.request` spans, two spend rows. The response-loss scenario consumes the real billed response and fails the client stream with no retries: one attempt, one spend row, a failed run. Neither scenario changes gateway or provider behavior.
+
 ## Verify the trace
 
 After the example prints its answer, open **Lens > Traces** on your gateway and select the new run. Look for the run associated with `research_agent`. Inspect the input, output, and model spans. For the swarm, inspect the specialist activity described above; its exact span layout depends on the framework.

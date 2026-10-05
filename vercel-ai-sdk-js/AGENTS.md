@@ -6,4 +6,4 @@
 - `sdk.shutdown()` in `finally` flushes spans before exit; if export fails it throws from `finally` and masks the model error.
 - Swarm: no native multi-agent primitive; sub-agents are tools whose `execute` calls `generateText` with their own `functionId`. `@ai-sdk/otel` runs `execute` inside the tool span, so sub-agent spans nest under the coordinator's tool call in one trace.
 - Swarm: `generateText` defaults to `stopWhen: isStepCount(1)`, so the coordinator needs `stopWhen: stepCountIs(n)` to continue after tool results.
-- Swarm: chat calls with `tools` are bridged to the Responses API by the gateway, which returns a raw `resp_` id while spend logs store the encoded one, so `research_agent` and trace spend are null.
+- Swarm: chat calls with `tools` are bridged to the Responses API by the gateway, which returns a raw `resp_` id while spend logs store the encoded one. Spend still resolves because each `gateway.request` span carries the gateway call ID and its own trace context (verified 2026-10-03 against a local proxy).

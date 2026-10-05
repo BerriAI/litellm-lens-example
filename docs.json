@@ -93,6 +93,13 @@
       "category": "integrations"
     },
     {
+      "source": "hermes-agent/README.md",
+      "slug": "/integrations/hermes-agent",
+      "title": "Hermes Agent",
+      "description": "Run Hermes Agent examples and send their agent traces to LiteLLM Lens.",
+      "category": "integrations"
+    },
+    {
       "source": "opentelemetry/README.md",
       "slug": "/integrations/opentelemetry",
       "title": "OpenTelemetry",

@@ -1,5 +1,5 @@
 - `graph.compile(name="research_agent")` sets the root span name; each node becomes a child span.
 - uv workspace: run from `langgraph/` with `uv run --env-file .env --package lens-langgraph-<example> <example>/main.py`.
 - swarm: each specialist is a compiled subgraph added as a node. `openinference-instrumentation-langchain` marks any run whose name contains "agent" as an AGENT span, so the node key must not contain "agent" (`search` wraps `search_agent`); otherwise node and subgraph both become agent spans and Lens counts two invocations per specialist.
-- `ChatOpenAI` spans carry the gateway response id only nested in `output.value` (`llm_output.id`), so Lens shows no spend until its OpenInference normalizer reads it. Adding `openinference-instrumentation-openai` would not help: it adds a second llm span per call and trace spend needs an id on every llm span.
+- `ChatOpenAI` spans carry the gateway response id only nested in `output.value` (`llm_output.id`); Lens reads it from there (verified against a local proxy on 2026-10-03: trace spend equals the spend rows). Adding `openinference-instrumentation-openai` would not help: it adds a second llm span per call and trace spend needs an id on every llm span.
 - `.python-version` pins 3.13; otherwise uv may pick a free-threaded 3.14t, where `orjson` has no wheel and fails to build.

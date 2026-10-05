@@ -15,7 +15,7 @@ LiteLLM reads these from the span (`litellm-rust/crates/traces/src/normalize/ins
 | Request header | `traceparent` carrying the attempt span's own IDs | LiteLLM logs them as the spend row's `trace_id` and `span_id` |
 | Response header | `x-litellm-call-id` → attribute `litellm.call_id` | Matches the spend row's `litellm_call_id`, with a fallback to `request_id` on older rows |
 
-An attempt resolves to spend only when both keys agree on one row owned by the same team and key. Each SDK retry is its own attempt with its own IDs, so a billed failure and its successful retry stay distinct rows. The span ends when the response body finishes, errors or is closed, so a streamed response keeps one span for its whole life, and the adapter never changes the current span, so later SDK spans keep their parent
+An attempt span is complete evidence on its own: its trace and span IDs match the spend row LiteLLM logged from `traceparent`, within the same team and key or user. When the call ID is present it is a second key that must agree with the same row. Each SDK retry is its own attempt with its own IDs, so a billed failure and its successful retry stay distinct rows. The span ends when the response body finishes, errors or is closed, so a streamed response keeps one span for its whole life, and the adapter never changes the current span, so later SDK spans keep their parent
 
 Only the URL's scheme, host, port and path are recorded (`url.full`, `server.address`). Authentication headers, query strings, bodies and exception messages are excluded; failures record `error.type` and an error status
 
@@ -32,6 +32,7 @@ Only the URL's scheme, host, port and path are recorded (`url.full`, `server.add
 | `pydantic-ai`, `vercel-ai-sdk-py`, `openai-agents` | `httpx2` async | `AsyncOpenAI(http_client=...)`; the instrumentor keeps the model span current during the request |
 | `opentelemetry` | `httpx2` sync | `OpenAI(http_client=...)`; `openinference-instrumentation-openai` keeps `ChatCompletion` current |
 | `strands`, `google-adk` | `httpx` async | SDKs still on `openai<3` |
+| `hermes-agent` | `httpx` sync | Supplied by a Hermes provider plugin's `build_client_kwargs_extras`; it parents attempts on hermes-otel's active span |
 
 Not wired, and why:
 

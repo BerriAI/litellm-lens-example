@@ -19,6 +19,7 @@ Runnable agent integrations that send traces to [LiteLLM Lens](https://docs.lite
 | Vercel AI SDK (TypeScript) | [Setup and examples](vercel-ai-sdk-js/README.md) |
 | Vercel AI SDK (Python) | [Setup and examples](vercel-ai-sdk-py/README.md) |
 | Mastra | [Setup and examples](mastra/README.md) |
+| Hermes Agent | [Setup and examples](hermes-agent/README.md) |
 | OpenTelemetry | [Setup and examples](opentelemetry/README.md) |
 
 ## Coding agent sessions

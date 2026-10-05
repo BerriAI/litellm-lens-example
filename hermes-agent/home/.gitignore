@@ -1,0 +1,10 @@
+/*
+!/.gitignore
+!/config.yaml
+!/hermes_otel.yaml
+!/plugins/
+/plugins/*
+!/plugins/model-providers/
+/plugins/model-providers/*
+!/plugins/model-providers/litellm/
+__pycache__/
