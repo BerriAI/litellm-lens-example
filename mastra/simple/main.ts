@@ -8,9 +8,11 @@ import { OtelBridge } from "@mastra/otel-bridge";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { gatewayFetch } from "gateway-tracing";
 
-const headers = { Authorization: `Bearer ${process.env.LITELLM_API_KEY}` };
+if (!process.env.LENS_URL || !process.env.LENS_TRACING_KEY) throw new Error("Set LENS_URL and LENS_TRACING_KEY from Lens tracing setup");
+
+const headers = { Authorization: `Bearer ${process.env.LENS_TRACING_KEY}` };
 const sdk = new NodeSDK({
-  spanProcessors: [process.env.LITELLM_GATEWAY_URL, process.env.MOCK_LITELLM_GATEWAY_URL]
+  spanProcessors: [process.env.LENS_URL, process.env.MOCK_LITELLM_GATEWAY_URL]
     .filter(Boolean)
     .map((url) => new tracing.BatchSpanProcessor(new OTLPTraceExporter({ url: `${url}/v1/traces`, headers }))),
 });

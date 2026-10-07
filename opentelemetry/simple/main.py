@@ -7,8 +7,8 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
 initialize()
 
-headers = {"Authorization": f"Bearer {os.environ['LITELLM_API_KEY']}"}
-for url in filter(None, [os.environ["LITELLM_GATEWAY_URL"], os.environ.get("MOCK_LITELLM_GATEWAY_URL")]):
+headers = {"Authorization": f"Bearer {os.environ['LENS_TRACING_KEY']}"}
+for url in filter(None, [os.environ["LENS_URL"], os.environ.get("MOCK_LITELLM_GATEWAY_URL")]):
     exporter = OTLPSpanExporter(f"{url}/v1/traces", headers=headers)
     trace.get_tracer_provider().add_span_processor(BatchSpanProcessor(exporter))
 

@@ -5,13 +5,15 @@ import { generateText, registerTelemetry, streamText } from "ai";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { createGatewayFetch } from "gateway-tracing";
 
+if (!process.env.LENS_URL || !process.env.LENS_TRACING_KEY) throw new Error("Set LENS_URL and LENS_TRACING_KEY from Lens tracing setup");
+
 const scenario = process.argv[2];
 if (!["streaming", "retry", "response-loss"].includes(scenario)) throw new Error("Expected streaming, retry or response-loss");
 const sdk = new NodeSDK({
-  spanProcessors: [process.env.LITELLM_GATEWAY_URL, process.env.MOCK_LITELLM_GATEWAY_URL]
+  spanProcessors: [process.env.LENS_URL, process.env.MOCK_LITELLM_GATEWAY_URL]
     .filter(Boolean)
     .map((url) => new tracing.BatchSpanProcessor(new OTLPTraceExporter({
-      url: `${url}/v1/traces`, headers: { Authorization: `Bearer ${process.env.LITELLM_API_KEY}` },
+      url: `${url}/v1/traces`, headers: { Authorization: `Bearer ${process.env.LENS_TRACING_KEY}` },
     }))),
 });
 sdk.start();

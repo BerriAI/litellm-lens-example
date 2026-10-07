@@ -4,7 +4,7 @@ Send Strands Agents traces to [LiteLLM Lens](https://docs.litellm.ai/docs/proxy/
 
 ## Prerequisites
 
-You need a LiteLLM gateway with [tracing enabled](https://docs.litellm.ai/docs/proxy/lens#configure-an-existing-proxy), a LiteLLM key, and a configured model alias. The swarm example needs a model that supports tool calls. A Lens worker is required for investigations; viewing traces does not require one.
+You need a LiteLLM gateway with [tracing enabled](https://docs.litellm.ai/docs/proxy/lens#configure-an-existing-proxy), a LiteLLM key, and a configured model alias. The swarm example needs a model that supports tool calls. The Lens service receives and stores traces separately from the gateway and runs investigations. Generate a dedicated tracing key in **Lens > Traces > Set up tracing**.
 
 Install uv. It uses the checked-in Python version and resolves each example’s dependencies from its uv workspace.
 
@@ -23,10 +23,12 @@ If you already cloned the repository, run the remaining commands from `strands/`
 | Variable | Value |
 | --- | --- |
 | `LITELLM_GATEWAY_URL` | Your gateway’s base URL without a trailing slash or `/v1`, for example `http://localhost:4002` |
-| `LITELLM_API_KEY` | Your LiteLLM key |
+| `LITELLM_API_KEY` | Your LiteLLM model key |
+| `LENS_URL` | The ingestion URL from Lens tracing setup, for example `http://localhost:4318` or `https://gateway.example/lens-ingest` |
+| `LENS_TRACING_KEY` | The dedicated tracing key from Lens tracing setup |
 | `LITELLM_MODEL` | A model alias configured on your gateway |
 
-The checked-in values target a local development gateway. Replace them for your deployment. Keep the exporter settings from `.env.example`; the examples configure their trace exporters in code. They send traces to `LITELLM_GATEWAY_URL/v1/traces` with the LiteLLM key as a bearer token.
+The checked-in values target a local development gateway. Replace them for your deployment. Keep the exporter settings from `.env.example`; the examples configure their trace exporters in code. They send traces to `LENS_URL/v1/traces` with the tracing key as a bearer token.
 
 Leave `MOCK_LITELLM_GATEWAY_URL` unset unless you intend to send an additional trace copy to the local [recorder](../recorder/AGENTS.md).
 
@@ -66,6 +68,6 @@ Validate retries and billed response loss against a real gateway with `uv run --
 
 ## Troubleshooting
 
-If model calls fail, check the gateway URL, key, and model alias. If an answer appears but the trace is missing, check the terminal for exporter errors and confirm tracing is enabled on the same gateway. A model call succeeding does not confirm that its trace export succeeded.
+If model calls fail, check the gateway URL, key, and model alias. If an answer appears but the trace is missing, check the terminal for exporter errors and confirm the Lens ingestion service is reachable with your tracing key. A model call succeeding does not confirm that its trace export succeeded.
 
 An “Attempting to instrument while already instrumented” warning can occur when Strands initializes threading instrumentation after the example has already initialized it.
