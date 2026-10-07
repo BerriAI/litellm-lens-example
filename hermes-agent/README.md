@@ -22,7 +22,7 @@ HERMES_HOME="$PWD/home" uv run --package lens-hermes-agent-simple hermes plugins
 cp .env.example .env
 ```
 
-If you already cloned the repository, run the remaining commands from `hermes-agent/`. The plugin installs into [home](home), the Hermes home directory both examples use. Copy [.env.example](.env.example) to `.env` if it does not exist, then set:
+If you already cloned the repository, run the remaining commands from `hermes-agent/`. The plugin installs into [home/hermes_otel.yaml](home/hermes_otel.yaml), the Hermes home directory both examples use. Copy [.env.example](.env.example) to `.env` if it does not exist, then set:
 
 | Variable | Value |
 | --- | --- |
