@@ -4,7 +4,7 @@ Send [Hermes Agent](https://github.com/NousResearch/hermes-agent) traces to [Lit
 
 ## Prerequisites
 
-You need a LiteLLM gateway with [tracing enabled](https://docs.litellm.ai/docs/proxy/lens#configure-an-existing-proxy), a LiteLLM key, and a configured model alias. The swarm example needs a model that supports tool calls. A Lens worker is required for investigations; viewing traces does not require one.
+You need a LiteLLM gateway with [tracing enabled](https://docs.litellm.ai/docs/proxy/lens#configure-an-existing-proxy), a LiteLLM key, and a configured model alias. The swarm example needs a model that supports tool calls. The Lens service receives and stores traces separately from the gateway and runs investigations. Generate a dedicated tracing key in **Lens > Traces > Set up tracing**.
 
 Install uv and Git. Hermes requires CPython 3.14 with the GIL; the checked-in `.python-version` selects it, and `uv python install 3.14` installs it if uv only finds a free-threaded build.
 
@@ -22,15 +22,17 @@ HERMES_HOME="$PWD/home" uv run --package lens-hermes-agent-simple hermes plugins
 cp .env.example .env
 ```
 
-If you already cloned the repository, run the remaining commands from `hermes-agent/`. The plugin installs into [home](home), the Hermes home directory both examples use. Copy [.env.example](.env.example) to `.env` if it does not exist, then set:
+If you already cloned the repository, run the remaining commands from `hermes-agent/`. The plugin installs into `home/`, the Hermes home directory both examples use. Copy [.env.example](.env.example) to `.env` if it does not exist, then set:
 
 | Variable | Value |
 | --- | --- |
 | `LITELLM_GATEWAY_URL` | Your gateway’s base URL without a trailing slash or `/v1`, for example `http://localhost:4000` |
-| `LITELLM_API_KEY` | Your LiteLLM key |
+| `LITELLM_API_KEY` | Your LiteLLM model key |
+| `LENS_URL` | The ingestion URL from Lens tracing setup, for example `http://localhost:4318` or `https://gateway.example/lens-ingest` |
+| `LENS_TRACING_KEY` | The dedicated tracing key from Lens tracing setup |
 | `LITELLM_MODEL` | A model alias configured on your gateway |
 
-The checked-in values target a local development gateway. Replace them for your deployment. [home/hermes_otel.yaml](home/hermes_otel.yaml) sends traces to `LITELLM_GATEWAY_URL/v1/traces` with the LiteLLM key as a bearer token.
+The checked-in values target a local development gateway. Replace them for your deployment. [home/hermes_otel.yaml](home/hermes_otel.yaml) sends traces to `LENS_URL/v1/traces` with the tracing key as a bearer token.
 
 ## Run an example
 
@@ -68,6 +70,6 @@ To trace your own Hermes install, copy the provider plugin into `~/.hermes/plugi
 
 ## Troubleshooting
 
-If model calls fail, check the gateway URL, key, and model alias. If an answer appears but the trace is missing, set `HERMES_OTEL_DEBUG=true` and check `home/plugins/hermes_otel/debug.log` and the terminal for exporter errors, and confirm tracing is enabled on the same gateway. A model call succeeding does not confirm that its trace export succeeded.
+If model calls fail, check the gateway URL, key, and model alias. If an answer appears but the trace is missing, set `HERMES_OTEL_DEBUG=true` and check `home/plugins/hermes_otel/debug.log` and the terminal for exporter errors, and confirm the Lens ingestion service is reachable with your tracing key. A model call succeeding does not confirm that its trace export succeeded.
 
 If a trace shows no spend, confirm the examples pass `provider="litellm"` and that each `api.<model>` span has a `gateway.request` child. If the process exits with a segmentation fault, uv selected a free-threaded Python: run `uv python install 3.14`, remove `.venv` and `home/installs`, and repeat the setup.

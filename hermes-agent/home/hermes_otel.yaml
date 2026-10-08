@@ -1,9 +1,9 @@
 backends:
   - type: otlp
     name: litellm
-    endpoint: ${LITELLM_GATEWAY_URL}/v1/traces
+    endpoint: ${LENS_URL}/v1/traces
     headers:
-      Authorization: Bearer ${LITELLM_API_KEY}
+      Authorization: Bearer ${LENS_TRACING_KEY}
     metrics: false
     logs: false
 dashboard_live: false

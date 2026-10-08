@@ -5,7 +5,9 @@ import { generateText, registerTelemetry } from "ai";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { gatewayFetch } from "gateway-tracing";
 
-const headers = { Authorization: `Bearer ${process.env.LITELLM_API_KEY}` };
+if (!process.env.LENS_URL || !process.env.LENS_TRACING_KEY) throw new Error("Set LENS_URL and LENS_TRACING_KEY from Lens tracing setup");
+
+const headers = { Authorization: `Bearer ${process.env.LENS_TRACING_KEY}` };
 // @ai-sdk/otel names agent spans `invoke_agent <model>`; use the agent name instead.
 const nameAgentSpans: tracing.SpanProcessor = {
   onStart: (span) => {
@@ -19,7 +21,7 @@ const nameAgentSpans: tracing.SpanProcessor = {
 const sdk = new NodeSDK({
   spanProcessors: [
     nameAgentSpans,
-    ...[process.env.LITELLM_GATEWAY_URL, process.env.MOCK_LITELLM_GATEWAY_URL]
+    ...[process.env.LENS_URL, process.env.MOCK_LITELLM_GATEWAY_URL]
       .filter(Boolean)
       .map((url) => new tracing.BatchSpanProcessor(new OTLPTraceExporter({ url: `${url}/v1/traces`, headers }))),
   ],
