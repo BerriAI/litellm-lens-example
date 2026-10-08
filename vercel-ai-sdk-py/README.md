@@ -4,9 +4,9 @@ Send Vercel AI SDK (Python) traces to [LiteLLM Lens](https://docs.litellm.ai/doc
 
 ## Prerequisites
 
-You need a LiteLLM gateway with [tracing enabled](https://docs.litellm.ai/docs/proxy/lens#configure-an-existing-proxy), a LiteLLM key, and a configured model alias. The swarm example needs a model that supports tool calls. The Lens service receives and stores traces separately from the gateway and runs investigations. Generate a dedicated tracing key in **Lens > Traces > Set up tracing**.
+You need [Lens installed alongside LiteLLM](https://docs.litellm.ai/docs/proxy/lens/deployment#configure-an-existing-proxy), a key with model access, and a configured model alias. The swarm example needs a model that supports tool calls. In **Lens > Traces > Set up tracing**, click **Generate tracing key** and copy the **Traces endpoint** under **Connection details**. Ask your administrator for these if you cannot create a tracing key.
 
-Install uv. It uses the checked-in Python version and resolves each example’s dependencies from its uv workspace.
+Install [uv](https://docs.astral.sh/uv/getting-started/installation/). It uses the checked-in Python version and resolves each example’s dependencies from its uv workspace.
 
 ## Configuration
 
@@ -24,7 +24,7 @@ If you already cloned the repository, run the remaining commands from `vercel-ai
 | --- | --- |
 | `LITELLM_GATEWAY_URL` | Your gateway’s base URL without a trailing slash or `/v1`, for example `http://localhost:4002` |
 | `LITELLM_API_KEY` | Your LiteLLM model key |
-| `LENS_URL` | The ingestion URL from Lens tracing setup, for example `http://localhost:4318` or `https://gateway.example/lens-ingest` |
+| `LENS_URL` | Copy **Traces endpoint** from Lens tracing setup and remove the final `/v1/traces`. Keep `/lens-ingest` if present. For example, `http://localhost:4318` or `https://gateway.example/lens-ingest` |
 | `LENS_TRACING_KEY` | The dedicated tracing key from Lens tracing setup |
 | `LITELLM_MODEL` | A model alias configured on your gateway |
 
