@@ -1,6 +1,6 @@
 # Documentation format
 
-Integration READMEs are the source of truth for the corresponding Lens integration pages in litellm-docs. Update the guide alongside its runnable example. The docs repository will import a reviewed snapshot from a specific source commit.
+Integration READMEs are the source of truth for the corresponding Lens integration pages in litellm-docs. Update the guide alongside its runnable example. The docs repository imports a reviewed snapshot from a specific source commit.
 
 ## README structure
 
@@ -24,11 +24,11 @@ The manifest has `schema_version: 1` and an ordered `pages` array. Each entry co
 
 The array order controls publication order within each category. Sources and slugs must be unique. Add a manifest entry when adding a published integration. Shared libraries, the recorder, and contributor documentation are outside this manifest.
 
-For example, `deepagents/README.md` with slug `/integrations/deepagents` is intended to publish at `https://docs.litellm.ai/lens/integrations/deepagents`. A source folder rename does not require changing its slug.
+For example, `deepagents/README.md` with slug `/integrations/deepagents` publishes at `https://docs.litellm.ai/docs/proxy/lens/integrations/deepagents`. A source folder rename does not require changing its slug.
 
 ## Importer contract
 
-The upcoming litellm-docs importer should read this manifest and all source files from the same pinned commit. Generate each complete page body from its README, then add Docusaurus metadata for the title, description, slug, sidebar label, source edit URL, and standard Markdown parsing (`mdx.format: md`). Record the imported commit in generated provenance. The edit URL should open the authoritative README on the source repository’s main branch.
+The litellm-docs importer reads this manifest and all source files from the same pinned commit. Generate each complete page body from its README, then add Docusaurus metadata for the title, description, slug, sidebar label, source edit URL, and standard Markdown parsing (`mdx.format: md`). Record the imported commit in generated provenance. The edit URL should open the authoritative README on the source repository’s main branch.
 
 Resolve links with a Markdown parser, including reference links and images. Links to other published READMEs should point to their Lens routes. Links to code, configuration, shared documentation, and other unpublished files should point to GitHub at the imported commit. Preserve query strings and fragments. Copy relative image assets into the docs output and rewrite their URLs. Current published LiteLLM docs URLs should remain usable until the docs migration maps them to the new routes.
 

@@ -4,7 +4,7 @@ Send your personal Claude Code sessions to [LiteLLM Lens](https://docs.litellm.a
 
 ## Prerequisites
 
-You need Claude Code, a LiteLLM gateway with [tracing enabled](https://docs.litellm.ai/docs/proxy/lens#configure-an-existing-proxy), and a dedicated Lens tracing key. Copy the ingestion URL and tracing key from **Lens > Traces > Set up tracing**.
+You need Claude Code, [Lens installed alongside LiteLLM](https://docs.litellm.ai/docs/proxy/lens/deployment#configure-an-existing-proxy), and a dedicated Lens tracing key. Open **Lens > Traces > Set up tracing**, copy the full **Traces endpoint** under **Connection details**, and click **Generate tracing key**. Ask your administrator for these if you cannot create a tracing key.
 
 ## Setup
 

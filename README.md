@@ -1,6 +1,6 @@
 # LiteLLM Lens examples
 
-Runnable agent integrations that send traces to [LiteLLM Lens](https://docs.litellm.ai/docs/proxy/lens). Each integration’s README owns its setup instructions and is the source for its planned page in litellm-docs.
+Runnable agent integrations that send traces to [LiteLLM Lens](https://docs.litellm.ai/docs/proxy/lens). Each integration’s README owns its setup instructions and is the source for its page in [the Lens documentation](https://docs.litellm.ai/docs/proxy/lens).
 
 ## Integrations
 
@@ -28,7 +28,7 @@ Runnable agent integrations that send traces to [LiteLLM Lens](https://docs.lite
 
 ## Documentation publishing
 
-[docs.json](docs.json) lists the READMEs intended for publication, their titles, descriptions, stable slugs, and sidebar categories. [DOCS.md](DOCS.md) describes the authoring format and the contract for the upcoming litellm-docs importer. The importer and sync workflow will be implemented in litellm-docs.
+[docs.json](docs.json) lists the published READMEs, their titles, descriptions, stable slugs, and sidebar categories. [DOCS.md](DOCS.md) describes the authoring format and the contract used by the [litellm-docs importer](https://github.com/BerriAI/litellm-docs/blob/main/scripts/sync-lens-docs.mjs).
 
 ## Shared tracing
 
