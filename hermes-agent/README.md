@@ -1,5 +1,7 @@
 # Hermes Agent
 
+For optional help from your coding agent, use [Set it up for me](https://github.com/BerriAI/lens/blob/main/docs/setup-with-agent.md#connect-an-agent-to-lens-already-running). It preserves your model connection and verifies a real trace after setup
+
 Send [Hermes Agent](https://github.com/NousResearch/hermes-agent) traces to [LiteLLM Lens](https://docs.litellm.ai/docs/proxy/lens) using the runnable examples in this repository. The examples embed Hermes as a Python library and export its traces with the [hermes-otel](https://github.com/briancaffey/hermes-otel) plugin.
 
 ## Prerequisites

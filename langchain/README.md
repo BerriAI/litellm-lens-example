@@ -1,5 +1,7 @@
 # LangChain
 
+For optional help from your coding agent, use [Set it up for me](https://github.com/BerriAI/lens/blob/main/docs/setup-with-agent.md#connect-an-agent-to-lens-already-running). It preserves your model connection and verifies a real trace after setup
+
 Send LangChain traces to [LiteLLM Lens](https://docs.litellm.ai/docs/proxy/lens) using the runnable examples in this repository.
 
 ## Prerequisites
