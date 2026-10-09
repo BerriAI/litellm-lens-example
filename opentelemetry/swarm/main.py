@@ -15,10 +15,15 @@ for url in filter(None, [os.environ["LENS_URL"], os.environ.get("MOCK_LITELLM_GA
 from gateway_tracing.httpx2 import gateway_sync_http_client
 from openai import OpenAI
 
-client = OpenAI(
-    base_url=f"{os.environ['LITELLM_GATEWAY_URL']}/v1",
-    api_key=os.environ["LITELLM_API_KEY"],
-    http_client=gateway_sync_http_client(f"{os.environ['LITELLM_GATEWAY_URL']}/v1"),
+gateway_url = os.environ.get("LITELLM_GATEWAY_URL")
+client = (
+    OpenAI(
+        base_url=f"{gateway_url.rstrip('/')}/v1",
+        api_key=os.environ["LITELLM_API_KEY"],
+        http_client=gateway_sync_http_client(f"{gateway_url.rstrip('/')}/v1"),
+    )
+    if gateway_url
+    else OpenAI()
 )
 tracer = trace.get_tracer(__name__)
 
@@ -29,7 +34,7 @@ def run_agent(name, prompt):
         span.set_attribute("openinference.span.kind", "AGENT")
         span.set_attribute("input.value", prompt)
         response = client.chat.completions.create(
-            model=os.environ["LITELLM_MODEL"],
+            model=os.environ["LITELLM_MODEL" if gateway_url else "OPENAI_MODEL"],
             messages=[{"role": "user", "content": prompt}],
         )
         answer = response.choices[0].message.content
