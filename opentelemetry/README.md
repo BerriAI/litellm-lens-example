@@ -6,7 +6,7 @@ Send OpenTelemetry traces to [LiteLLM Lens](https://docs.litellm.ai/docs/proxy/l
 
 ## Prerequisites
 
-You need [Lens](https://github.com/BerriAI/lens/blob/main/deploy/lens/README.md), either standalone with ClickHouse or connected to LiteLLM. Open **Settings > Tracing > Connect an agent**, create a tracing key, and copy the **Traces endpoint**. Keep provider credentials separate from that telemetry key. The examples support direct OpenAI calls or calls through an existing LiteLLM gateway
+You need [Lens](https://github.com/BerriAI/lens/blob/main/deploy/lens/README.md), either standalone with ClickHouse or connected to LiteLLM. Open **Traces** and choose **Set up tracing** if the setup panel is not already open. Then create a tracing key, and copy the **Traces endpoint**. Keep provider credentials separate from that telemetry key. The examples support direct OpenAI calls or calls through an existing LiteLLM gateway
 
 Install [uv](https://docs.astral.sh/uv/getting-started/installation/). It uses the checked-in Python version and resolves each example’s dependencies from its uv workspace.
 
