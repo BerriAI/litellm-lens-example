@@ -1,11 +1,13 @@
 import os
 
+from openinference.instrumentation.openai_agents import OpenAIAgentsInstrumentor
 from opentelemetry import trace
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
-from opentelemetry.instrumentation.auto_instrumentation import initialize
+from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
-initialize()
+trace.set_tracer_provider(TracerProvider())
+OpenAIAgentsInstrumentor().instrument(exclusive_processor=True)
 
 headers = {"Authorization": f"Bearer {os.environ['LENS_TRACING_KEY']}"}
 for url in filter(None, [os.environ["LENS_URL"], os.environ.get("MOCK_LITELLM_GATEWAY_URL")]):
@@ -16,13 +18,19 @@ from agents import Agent, OpenAIResponsesModel, RunConfig, Runner
 from gateway_tracing.httpx2 import gateway_http_client
 from openai import AsyncOpenAI
 
-model = OpenAIResponsesModel(
-    model=os.environ["LITELLM_MODEL"],
-    openai_client=AsyncOpenAI(
-        base_url=f"{os.environ['LITELLM_GATEWAY_URL']}/v1",
+gateway_url = os.environ.get("LITELLM_GATEWAY_URL")
+client = (
+    AsyncOpenAI(
+        base_url=f"{gateway_url.rstrip('/')}/v1",
         api_key=os.environ["LITELLM_API_KEY"],
-        http_client=gateway_http_client(f"{os.environ['LITELLM_GATEWAY_URL']}/v1"),
-    ),
+        http_client=gateway_http_client(f"{gateway_url.rstrip('/')}/v1"),
+    )
+    if gateway_url
+    else AsyncOpenAI()
+)
+model = OpenAIResponsesModel(
+    model=os.environ["LITELLM_MODEL" if gateway_url else "OPENAI_MODEL"],
+    openai_client=client,
 )
 
 search_agent = Agent(name="search_agent", instructions="Find key facts about the topic.", model=model)

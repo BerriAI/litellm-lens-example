@@ -2,6 +2,12 @@
 
 Runnable agent integrations that send traces to [LiteLLM Lens](https://docs.litellm.ai/docs/proxy/lens). Each integration’s README owns its setup instructions and is the source for its page in [the Lens documentation](https://docs.litellm.ai/docs/proxy/lens).
 
+## Start without a gateway
+
+Want your coding agent to configure the project? Copy the optional [Set it up for me](https://github.com/BerriAI/lens/blob/main/docs/setup-with-agent.md) prompt for standalone installation or connecting an agent to Lens already running
+
+Run [Lens with ClickHouse](https://github.com/BerriAI/lens/blob/main/deploy/lens/README.md), then follow [OpenAI Agents SDK](openai-agents/README.md) or [OpenTelemetry](opentelemetry/README.md) using the direct-provider environment template. Model calls use your provider credential; telemetry uses a separate Lens tracing key. The other framework examples retain their existing gateway model configuration
+
 ## Integrations
 
 | Integration | Guide |
