@@ -35,7 +35,7 @@ For gateway calls, use [.env.example](.env.example) instead and set the three `L
 | `LENS_TRACING_KEY` | The dedicated tracing key from Lens tracing setup |
 | `LITELLM_MODEL` | A model alias configured on your LiteLLM gateway |
 
-The gateway template targets a local development gateway. Replace its model connection values for your deployment. Keep the exporter settings from `.env.example`; the examples configure their trace exporters in code. They send traces to `LENS_URL/v1/traces` with the tracing key as a bearer token.
+The gateway template targets a local development gateway. Replace its model connection values for your deployment. The examples configure their trace exporters in code and explicitly replace the SDK’s default OpenAI trace exporter. They send traces to `LENS_URL/v1/traces` with the tracing key as a bearer token.
 
 Leave `MOCK_LITELLM_GATEWAY_URL` unset unless you intend to send an additional trace copy to the local [recorder](../recorder/AGENTS.md).
 

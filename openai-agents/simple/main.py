@@ -1,11 +1,13 @@
 import os
 
+from openinference.instrumentation.openai_agents import OpenAIAgentsInstrumentor
 from opentelemetry import trace
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
-from opentelemetry.instrumentation.auto_instrumentation import initialize
+from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
-initialize()
+trace.set_tracer_provider(TracerProvider())
+OpenAIAgentsInstrumentor().instrument(exclusive_processor=True)
 
 headers = {"Authorization": f"Bearer {os.environ['LENS_TRACING_KEY']}"}
 for url in filter(None, [os.environ["LENS_URL"], os.environ.get("MOCK_LITELLM_GATEWAY_URL")]):
