@@ -6,7 +6,7 @@ Integration READMEs are the source of truth for the corresponding Lens integrati
 
 Use one H1 matching the page title in [docs.json](docs.json), followed by a short description. Runnable integration guides use these H2 sections in order: Prerequisites, Configuration, Run an example, Verify the trace, How tracing works, and Troubleshooting. Under Run an example, use Simple agent and Agent swarm H3 sections; add Streaming only when supported. Additional adapter, validation, and reference sections may follow.
 
-Coding agent pointer guides use Prerequisites, Setup, Verify the trace, and Troubleshooting. Keep installation details in the linked maintained guide.
+Coding agent pointer guides use Prerequisites, Setup, Verify the trace, and Troubleshooting. Lead with the LiteLLM Lens plugin and its install commands, and keep the remaining details in the linked maintained guide.
 
 Use plain Markdown with fenced code blocks and explicit language names. Keep Docusaurus imports, JSX, components, and front matter out of these READMEs. Use relative links to repository files so they work on GitHub. Document the working directory for every command and explain how to configure the environment. Leave gateway and model values configurable.
 
