@@ -4,7 +4,7 @@ Send your personal Codex sessions to [LiteLLM Lens](https://docs.litellm.ai/docs
 
 ## Prerequisites
 
-You need a Codex version with plugin support on macOS or Linux, Python 3.11 or later, and a running [Lens installation](https://docs.litellm.ai/docs/proxy/lens/deployment). Setup takes an address and a key. With standalone Lens, use your Lens address and a dedicated Lens tracing key; open **Home** in Lens, choose **Standalone Lens**, and create one. When your Codex model calls already go through a LiteLLM gateway connected to Lens, use the gateway address and the LiteLLM key Codex already uses. Ask your administrator for a tracing key if you cannot create one.
+You need a Codex version with plugin support on macOS or Linux, Python 3.11 or later, and a running [Lens installation](https://docs.litellm.ai/docs/proxy/lens/deployment). Setup takes an address and a key. With standalone Lens, use your Lens address and a dedicated Lens tracing key; open **Home** in Lens, choose **Standalone Lens**, and create one. When your Codex model calls already go through a LiteLLM gateway connected to Lens, use the gateway address and the LiteLLM key Codex already uses. Ask your administrator for a tracing key if you cannot create one. <!-- keep-python-version: Codex plugin prerequisite -->
 
 ## Setup
 

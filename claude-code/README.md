@@ -4,7 +4,7 @@ Send your personal Claude Code sessions to [LiteLLM Lens](https://docs.litellm.a
 
 ## Prerequisites
 
-You need Claude Code on macOS or Linux, Python 3.10 or later on the `PATH`, and a running [Lens installation](https://docs.litellm.ai/docs/proxy/lens/deployment). The plugin takes an address and a key. When your Claude Code model calls already go through a LiteLLM gateway connected to Lens, use the gateway address and the LiteLLM key Claude Code already uses. With standalone Lens, use your Lens address and a dedicated Lens tracing key; open **Home** in Lens, choose **Standalone Lens**, and create one. Ask your administrator for a tracing key if you cannot create one.
+You need Claude Code on macOS or Linux, Python 3.10 or later on the `PATH`, and a running [Lens installation](https://docs.litellm.ai/docs/proxy/lens/deployment). The plugin takes an address and a key. When your Claude Code model calls already go through a LiteLLM gateway connected to Lens, use the gateway address and the LiteLLM key Claude Code already uses. With standalone Lens, use your Lens address and a dedicated Lens tracing key; open **Home** in Lens, choose **Standalone Lens**, and create one. Ask your administrator for a tracing key if you cannot create one. <!-- keep-python-version: Claude Code plugin prerequisite -->
 
 ## Setup
 
