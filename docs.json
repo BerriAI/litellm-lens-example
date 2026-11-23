@@ -110,14 +110,14 @@
       "source": "claude-code/README.md",
       "slug": "/coding-agents/claude-code",
       "title": "Claude Code",
-      "description": "Connect personal Claude Code sessions to LiteLLM Lens using the maintained setup guides.",
+      "description": "Send personal Claude Code sessions to LiteLLM Lens with the LiteLLM Lens plugin for Claude Code.",
       "category": "coding-agents"
     },
     {
       "source": "codex/README.md",
       "slug": "/coding-agents/codex",
       "title": "Codex",
-      "description": "Connect personal Codex sessions to LiteLLM Lens using the maintained setup guides.",
+      "description": "Send personal Codex sessions to LiteLLM Lens with the LiteLLM Lens plugin for Codex.",
       "category": "coding-agents"
     }
   ]
